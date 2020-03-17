@@ -23,6 +23,12 @@ def get_all_cards():
     return data_handler.get_all_from_table('cards')
 
 
+@app.route("/get-statuses")
+@json_response
+def get_statuses():
+    return data_handler.get_all_from_table('statuses')
+
+
 def main():
     app.run(debug=True)
 
