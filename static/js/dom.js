@@ -61,7 +61,7 @@ export let dom = {
         for (let card of cards) {
             console.log(card);
             const outerHtml = `
-            <div class="card-title">${card.title}</div>`;
+            <div class="card">${card.title}</div>`;
             let cardContainer = document.querySelector("[data-status-id=" + CSS.escape(card.status_id) + "]");
             console.log(cardContainer);
             cardContainer.insertAdjacentHTML("beforeend", outerHtml);
