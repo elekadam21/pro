@@ -24,6 +24,7 @@ export let dom = {
                     <button class="board-add">Add Card</button>
                     <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
                 </div>
+            <div class="board-columns"  data-id="${board.id}"></div>
             </section>
         `;
 
@@ -32,6 +33,26 @@ export let dom = {
         }
 
         // boardsContainer.innerHTML = outerHtml;
+    },
+    loadStatuses: function () {
+        dataHandler.getStatuses(function (statuses) {
+            dom.showStatuses(statuses);
+        });
+    },
+    showStatuses: function (statuses) {
+        for (let status of statuses) {
+             console.log(status);
+             const outerHtml = `
+            <div class="board-column">
+                <div class="board-column-title">${status.title}</div>
+                <div class="board-column-content" status-id="${status.id}">
+                </div>
+            </div>
+             `;
+             let statusContainerBoard = document.querySelector("[data-id=" + CSS.escape(status.board_id) + "]");
+             console.log(statusContainerBoard);
+             statusContainerBoard.insertAdjacentHTML("beforeend", outerHtml);
+         }
     },
     loadCards: function (boardId) {
         // retrieves cards and makes showCards called

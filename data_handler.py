@@ -66,3 +66,13 @@ def get_all_from_table(cursor: RealDictCursor, table) -> list:
     FROM {}'''.format(table)
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@persistence.connection_handler
+def get_all_from_table_by_board_id(cursor: RealDictCursor, table, board_id) -> list:
+    query = '''
+    SELECT *
+    FROM {}
+    WHERE board_id == {}'''.format(table, board_id)
+    cursor.execute(query)
+    return cursor.fetchall()
