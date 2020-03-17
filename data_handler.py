@@ -66,3 +66,13 @@ def get_all_from_table(cursor: RealDictCursor, table) -> list:
     FROM {}'''.format(table)
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@persistence.connection_handler
+def get_cards_by_status_id(cursor: RealDictCursor, status_id) -> list:
+    query = '''
+    SELECT *
+    FROM cards
+    WHERE status_id = {}'''.format(status_id)
+    cursor.execute(query)
+    return cursor.fetchall()

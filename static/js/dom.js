@@ -18,27 +18,35 @@ export let dom = {
         let boardList = '';
 
         for (let board of boards) {
+            console.log(board.id);
             const outerHtml = `
-            <section class="board">
+            <section class="board" data-id="${board.id}">
                 <div class="board-header"><span class="board-title">${board.title}</span>
                     <button class="board-add">Add Card</button>
                     <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
                 </div>
+                <div class="board-columns"></div>
             </section>
         `;
 
-        let boardsContainer = document.querySelector('.board-container');
-        boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
+            let boardsContainer = document.querySelector('.board-container');
+            boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
         }
-
-        // boardsContainer.innerHTML = outerHtml;
     },
-    loadCards: function (boardId) {
-        // retrieves cards and makes showCards called
+    loadCards: function () {
+        dataHandler.getCardsByStatusId(function (cards) {
+            dom.showCards(cards)
+        })
     },
     showCards: function (cards) {
-        // shows the cards of a board
-        // it adds necessary event listeners also
+        for (let card of cards) {
+            console.log(card);
+            const outerHtml = `
+            <div class="card">${card.title}</div>`;
+            let cardContainer = document.querySelector("[data-status-id=" + CSS.escape(card.status_id) + "]");
+            console.log(cardContainer);
+            cardContainer.insertAdjacentHTML("beforeend", outerHtml);
+        }
     },
     // here comes more features
 };

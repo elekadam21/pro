@@ -17,10 +17,10 @@ def get_boards():
     return data_handler.get_all_from_table('boards')
 
 
-@app.route("/get-cards/<int:board_id>")
+@app.route("/get-cards")
 @json_response
-def get_cards_for_board(board_id: int):
-    return data_handler.get_all_from_table(board_id)
+def get_all_cards():
+    return data_handler.get_all_from_table('cards')
 
 
 def main():
