@@ -69,10 +69,10 @@ def get_all_from_table(cursor: RealDictCursor, table) -> list:
 
 
 @persistence.connection_handler
-def get_all_from_table_by_board_id(cursor: RealDictCursor, table, board_id) -> list:
+def get_cards_by_status_id(cursor: RealDictCursor, status_id) -> list:
     query = '''
     SELECT *
-    FROM {}
-    WHERE board_id == {}'''.format(table, board_id)
+    FROM cards
+    WHERE status_id = {}'''.format(status_id)
     cursor.execute(query)
     return cursor.fetchall()
