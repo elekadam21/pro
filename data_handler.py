@@ -1,8 +1,7 @@
+from psycopg2._psycopg import cursor
+
 import persistence
 from psycopg2.extras import RealDictCursor
-import database_comman
-
-
 # def get_card_status(status_id):
 #     """
 #     Find the first status matching the given id
@@ -30,3 +29,40 @@ import database_comman
 #             card['status_id'] = get_card_status(card['status_id'])  # Set textual status for the card
 #             matching_cards.append(card)
 #     return matching_cards
+#
+#
+# @persistence.connection_handler
+# def get_boards(cursor: RealDictCursor) -> list:
+#     query = '''
+#     SELECT *
+#     FROM boards'''
+#     cursor.execute(query)
+#     return cursor.fetchall()
+#
+#
+# @persistence.connection_handler
+# def get_statuses(cursor: RealDictCursor) -> list:
+#     query = '''
+#     SELECT *
+#     FROM statuses'''
+#     cursor.execute(query)
+#     return cursor.fetchall()
+#
+#
+# @persistence.connection_handler
+# def get_cards(cursor: RealDictCursor) -> list:
+#     query = '''
+#     SELECT *
+#     FROM cards'''
+#     cursor.execute(query)
+#     return cursor.fetchall()
+
+
+# felső három együtt
+@persistence.connection_handler
+def get_all_from_table(cursor: RealDictCursor, table) -> list:
+    query = '''
+    SELECT *
+    FROM {}'''.format(table)
+    cursor.execute(query)
+    return cursor.fetchall()
