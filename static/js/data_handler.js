@@ -47,7 +47,7 @@ export let dataHandler = {
     },
     getCardsByStatusId: function (callback) {
         this._api_get("/get-cards", (response) => {
-            this._data.append(response);
+            // this._data.append(response);
             callback(response);
         });
     },

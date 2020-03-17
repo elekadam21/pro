@@ -18,7 +18,6 @@ export let dom = {
         let boardList = '';
 
         for (let board of boards) {
-            console.log(board.id);
             const outerHtml = `
             <section class="board" data-id="${board.id}">
                 <div class="board-header"><span class="board-title">${board.title}</span>
@@ -44,7 +43,7 @@ export let dom = {
              const outerHtml = `
             <div class="board-column">
                 <div class="board-column-title">${status.title}</div>
-                <div class="board-column-content" status-id="${status.id}">
+                <div class="board-column-content" data-status-id="${status.id}">
                 </div>
             </div>
              `;
@@ -53,7 +52,7 @@ export let dom = {
              statusContainerBoard.insertAdjacentHTML("beforeend", outerHtml);
          }
     },
-    loadCards: function (boardId) {
+    loadCards: function () {
         dataHandler.getCardsByStatusId(function (cards) {
             dom.showCards(cards)
         })
@@ -62,7 +61,7 @@ export let dom = {
         for (let card of cards) {
             console.log(card);
             const outerHtml = `
-            <div class="card">${card.title}</div>`;
+            <div class="card-title">${card.title}</div>`;
             let cardContainer = document.querySelector("[data-status-id=" + CSS.escape(card.status_id) + "]");
             console.log(cardContainer);
             cardContainer.insertAdjacentHTML("beforeend", outerHtml);
