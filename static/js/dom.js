@@ -8,10 +8,10 @@ export let dom = {
     loadBoards: function () {
         // retrieves boards and makes showBoards called
         dataHandler.getBoards(function (boards) {
-            dom.showBoards(boards);
+            dom.showBoards(boards, dom.loadStatuses);
         });
     },
-    showBoards: function (boards) {
+    showBoards: function (boards, callback) {
         // shows boards appending them to #boards div
         // it adds necessary event listeners also
 
@@ -31,15 +31,15 @@ export let dom = {
             let boardsContainer = document.querySelector('.board-container');
             boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
         }
+        callback();
     },
     loadStatuses: function () {
         dataHandler.getStatuses(function (statuses) {
-            dom.showStatuses(statuses);
+            dom.showStatuses(statuses, dom.loadCards);
         });
     },
-    showStatuses: function (statuses) {
+    showStatuses: function (statuses, callback) {
         for (let status of statuses) {
-             console.log(status);
              const outerHtml = `
             <div class="board-column">
                 <div class="board-column-title">${status.title}</div>
@@ -48,9 +48,9 @@ export let dom = {
             </div>
              `;
              let statusContainerBoard = document.querySelector("[data-id=" + CSS.escape(status.board_id) + "]");
-             console.log(statusContainerBoard);
              statusContainerBoard.insertAdjacentHTML("beforeend", outerHtml);
          }
+        callback();
     },
     loadCards: function () {
         dataHandler.getCardsByStatusId(function (cards) {
@@ -59,11 +59,9 @@ export let dom = {
     },
     showCards: function (cards) {
         for (let card of cards) {
-            console.log(card);
             const outerHtml = `
             <div class="card">${card.title}</div>`;
             let cardContainer = document.querySelector("[data-status-id=" + CSS.escape(card.status_id) + "]");
-            console.log(cardContainer);
             cardContainer.insertAdjacentHTML("beforeend", outerHtml);
         }
     },
