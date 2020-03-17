@@ -19,7 +19,7 @@ export let dom = {
 
         for (let board of boards) {
             const outerHtml = `
-            <section class="board" data-id="${board.id}">
+            <section class="board">
                 <div class="board-header"><span class="board-title">${board.title}</span>
                     <button class="board-add">Add Card</button>
                     <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
