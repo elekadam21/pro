@@ -85,3 +85,4 @@ def rename_board(cursor: RealDictCursor, title, id):
     SET title = %(title)s
     WHERE id = %(id)s'''
     cursor.execute(query, {"title": title, "id": id})
+    return 'done'

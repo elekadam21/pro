@@ -33,12 +33,12 @@ def get_statuses():
 @json_response
 def rename():
     data = request.get_json()
-    data_handler.rename_board(data["title"], data["id"])
-    return jsonify(data_handler.get_all_from_table('boards'))
+    response = data_handler.rename_board(data["title"], data["id"])
+    return response
 
 
 def main():
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
 
     # Serving the favicon
     with app.app_context():

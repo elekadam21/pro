@@ -89,11 +89,15 @@ export let dom = {
 
                 dataHandler._api_post('http://127.0.0.1:5000/rename', data, () => {
 
+                    let boardTitle = document.getElementById(`${id}`);
+
                     let newTitle = `<span class="board-title" id="${id}">${title}</span>`;
 
                     boardDiv.removeChild(boardTitle);
 
                     boardDiv.insertAdjacentHTML("afterbegin", newTitle);
+
+                    dom.renameBoard(id, title);
 
                 });
             })

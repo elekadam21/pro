@@ -23,8 +23,8 @@ export let dataHandler = {
             method: 'POST',
             credentials: 'same-origin',
             headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             body: JSON.stringify(data)
         })
