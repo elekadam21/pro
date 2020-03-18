@@ -26,6 +26,7 @@ export let dom = {
             let boardsContainer = document.querySelector('.board-container');
             boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
             document.querySelector("[data-board-id=" + CSS.escape(board.id) + "]").addEventListener('click', dom.createCard);
+            dom.renameBoard(board.id, board.title);
         }
         callback();
     },
@@ -67,6 +68,42 @@ export let dom = {
         dataHandler.createNewCard(board_id, status_id, function (cards) {
             dom.showCards(cards)
         })
+    },
+    renameBoard: function (id, title) {
+        let boardTitle = document.getElementById(`${id}`);
+
+        boardTitle.addEventListener('click', () => {
+
+            let boardDiv = document.getElementById(`board${id}`);
+
+            boardDiv.removeChild(boardTitle);
+
+            boardTitle = `<input class="board-title" id="${id}" value="${title}">`;
+
+            boardDiv.insertAdjacentHTML("afterbegin", boardTitle);
+
+            let inputField = document.getElementById(`${id}`);
+
+            inputField.addEventListener('focusout', () => {
+
+                let title = document.getElementById(`${id}`).value;
+
+                let data = {"title": title, "id": id};
+
+                dataHandler._api_post('http://127.0.0.1:5000/rename', data, () => {
+
+                    let boardTitle = document.getElementById(`${id}`);
+
+                    let newTitle = `<span class="board-title" id="${id}">${title}</span>`;
+
+                    boardDiv.removeChild(boardTitle);
+
+                    boardDiv.insertAdjacentHTML("afterbegin", newTitle);
+
+                    dom.renameBoard(id, title);
+
+                });
+            })
+        })
     }
-    // here comes more features
 };

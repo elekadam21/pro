@@ -37,8 +37,16 @@ def create_card():
     return data_handler.get_all_from_table('cards')
 
 
+@app.route("/rename", methods=['GET', 'POST'])
+@json_response
+def rename():
+    data = request.get_json()
+    response = data_handler.rename_board(data["title"], data["id"])
+    return response
+
+
 def main():
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
 
     # Serving the favicon
     with app.app_context():

@@ -84,3 +84,13 @@ def create_card(cursor: RealDictCursor, board_id, status_id):
     INSERT INTO cards (board_id, status_id)
     VALUES (%(board_id)s, %(status_id)s)'''
     cursor.execute(query, {"board_id": board_id, "status_id": status_id})
+
+
+@persistence.connection_handler
+def rename_board(cursor: RealDictCursor, title, id):
+    query = '''
+    UPDATE boards
+    SET title = %(title)s
+    WHERE id = %(id)s'''
+    cursor.execute(query, {"title": title, "id": id})
+    return 'done'
