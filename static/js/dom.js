@@ -75,25 +75,27 @@ export let dom = {
 
             boardDiv.removeChild(boardTitle);
 
-            boardTitle = `<input class="board-title" id="${id}" value="${title}">
-                          <button id="rename" type="submit" value="Submit">Submit</button>`;
+            boardTitle = `<input class="board-title" id="${id}" value="${title}">`;
 
             boardDiv.insertAdjacentHTML("afterbegin", boardTitle);
 
-            document.getElementById('rename').addEventListener('click', () => {
+            let inputField = document.getElementById(`${id}`);
+
+            inputField.addEventListener('focusout', () => {
 
                 let title = document.getElementById(`${id}`).value;
 
                 let data = {"title": title, "id": id};
 
-                dataHandler._api_post('http://127.0.0.1:5000/rename', data, (response) => {
-                    console.log(response);
+                dataHandler._api_post('http://127.0.0.1:5000/rename', data, () => {
+
+                    let newTitle = `<span class="board-title" id="${id}">${title}</span>`;
+
+                    boardDiv.removeChild(boardTitle);
+
+                    boardDiv.insertAdjacentHTML("afterbegin", newTitle);
+
                 });
-
-            document.getElementById(`${id}`).addEventListener('mouseout', () => {
-                console.log('out');
-            })
-
             })
         })
     }
