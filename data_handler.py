@@ -85,3 +85,12 @@ def create_new_board(cursor, title, id):
                     """,{'title': title,'id':id})
     return 'done'
 
+@persistence.connection_handler
+def get_last_board(cursor:RealDictCursor):
+    query = """
+                    SELECT id, title FROM boards
+                    ORDER BY id DESC
+                    LIMIT 1
+                    """
+    cursor.execute(query)
+    return cursor.fetchall()

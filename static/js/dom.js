@@ -16,11 +16,11 @@ export let dom = {
         // it adds necessary event listeners also
 
         let boardList = '';
-            let outerHtml = '';
+
         for (let board of boards) {
-            outerHtml += `
+            const outerHtml = `
             <section class="board">
-                <div class="board-header"><span class="board-title">${board.title}</span>
+                <div class="board-header" id="board${board.id}"><span class="board-title" id="${board.id}">${board.title}</span>
                     <button class="board-add">Add Card</button>
                     <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
                 </div>
@@ -29,8 +29,7 @@ export let dom = {
         `;
 
             let boardsContainer = document.querySelector('.board-container');
-            // boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
-            boardsContainer.innerHTML = outerHtml
+            boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
         }
     },
     loadStatuses: function () {
@@ -89,8 +88,19 @@ export let dom = {
                 let title = boards.slice(-1)[0]['title'].slice(0,-1)+boardId
 
             let data = {'title':title, 'id':boardId}
-            dataHandler._api_post('http://127.0.0.1:5000/create-new-board',data,()=>{
-                dom.loadBoards();
+            dataHandler._api_post('http://127.0.0.1:5000/create-new-board',data,(response)=>{
+                console.log(response[0]['id'])
+                let outerHtml = `
+                        <section class="board">
+                            <div class="board-header"><span class="board-title">${response[0]['title']}</span>
+                                <button class="board-add">Add Card</button>
+                                <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        <div class="board-columns"  data-id="${response[0]['id']}"></div>
+                        </section>
+                    `;
+            let boardsContainer = document.querySelector('.board-container');
+            boardsContainer.insertAdjacentHTML("afterend", outerHtml);
             })
             })
 

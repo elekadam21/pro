@@ -35,7 +35,11 @@ def create_new_board():
     data = request.get_json()
     print(data['title'])
     response = data_handler.create_new_board(data['title'], data['id'])
-    return response
+    top_board = data_handler.get_last_board()
+    print(top_board)
+
+
+    return top_board
 
 
 def main():
