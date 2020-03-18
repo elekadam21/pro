@@ -76,3 +76,12 @@ def get_cards_by_status_id(cursor: RealDictCursor, status_id) -> list:
     WHERE status_id = {}'''.format(status_id)
     cursor.execute(query)
     return cursor.fetchall()
+
+@persistence.connection_handler
+def create_new_board(cursor, title, id):
+    cursor.execute("""
+                    INSERT INTO boards
+                    VALUES (%(id)s, %(title)s)
+                    """,{'title': title,'id':id})
+    return 'done'
+

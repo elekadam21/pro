@@ -8,6 +8,8 @@ function init() {
     dom.loadBoards();
     dom.loadStatuses();
     dom.loadCards()
+    dom.createAddBoardButton()
+    dom.addBoard()
 }
 
 init();

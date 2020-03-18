@@ -16,9 +16,9 @@ export let dom = {
         // it adds necessary event listeners also
 
         let boardList = '';
-
+            let outerHtml = '';
         for (let board of boards) {
-            const outerHtml = `
+            outerHtml += `
             <section class="board">
                 <div class="board-header"><span class="board-title">${board.title}</span>
                     <button class="board-add">Add Card</button>
@@ -29,7 +29,8 @@ export let dom = {
         `;
 
             let boardsContainer = document.querySelector('.board-container');
-            boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
+            // boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
+            boardsContainer.innerHTML = outerHtml
         }
     },
     loadStatuses: function () {
@@ -49,6 +50,7 @@ export let dom = {
              `;
              let statusContainerBoard = document.querySelector("[data-id=" + CSS.escape(status.board_id) + "]");
              console.log(statusContainerBoard);
+
              statusContainerBoard.insertAdjacentHTML("beforeend", outerHtml);
          }
     },
@@ -67,5 +69,32 @@ export let dom = {
             cardContainer.insertAdjacentHTML("beforeend", outerHtml);
         }
     },
-    // here comes more features
+    createAddBoardButton: function () {
+        let boardsContainer = document.querySelector('.board-container');
+
+        const addButton= `
+                        <section class="add-board">
+                            <div id="add-board">
+                                <button type="button" id="myBtn" >add board</button>        
+                            </div>
+                        </section>
+                                        `;
+        boardsContainer.insertAdjacentHTML('beforebegin', addButton)
+
+        },
+    addBoard: function(){
+        let addButton = document.querySelector('#myBtn').addEventListener('click', function(){
+            dataHandler.getBoards(function(boards){
+                let boardId = boards.slice(-1)[0]['id']+1
+                let title = boards.slice(-1)[0]['title'].slice(0,-1)+boardId
+
+            let data = {'title':title, 'id':boardId}
+            dataHandler._api_post('http://127.0.0.1:5000/create-new-board',data,()=>{
+                dom.loadBoards();
+            })
+            })
+
+
+        })
+    }
 };
