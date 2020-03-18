@@ -17,8 +17,6 @@ export let dataHandler = {
             .then(json_response => callback(json_response));  // Call the `callback` with the returned object
     },
     _api_post: function (url, data, callback) {
-        console.log(data);
-        console.log(url);
         fetch(url, {
             method: 'POST',
             credentials: 'same-origin',

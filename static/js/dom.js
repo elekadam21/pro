@@ -1,5 +1,6 @@
 // It uses data_handler.js to visualize elements
 import {dataHandler} from "./data_handler.js";
+import {drag} from "./drag&drop.js";
 
 export let dom = {
     init: function () {
@@ -44,7 +45,7 @@ export let dom = {
             const outerHtml = `
             <div class="board-column">
                 <div class="board-column-title">${status.title}</div>
-                <div class="board-column-content" data-status-id="${status.id}">
+                <div class="board-column-content" data-status-id="${status.id}" id="status${status.id}">
                 </div>
             </div>
              `;
@@ -55,16 +56,17 @@ export let dom = {
     },
     loadCards: function () {
         dataHandler.getCardsByStatusId(function (cards) {
-            dom.showCards(cards)
+            dom.showCards(cards, drag.initDragAndDrop)
         })
     },
-    showCards: function (cards) {
+    showCards: function (cards, callback) {
         for (let card of cards) {
             const outerHtml = `
             <div class="card">${card.title}</div>`;
             let cardContainer = document.querySelector("[data-status-id=" + CSS.escape(card.status_id) + "]");
             cardContainer.insertAdjacentHTML("beforeend", outerHtml);
         }
+        callback();
     },
     renameBoard: function (id, title) {
         let boardTitle = document.getElementById(`${id}`);
