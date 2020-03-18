@@ -29,6 +29,14 @@ def get_statuses():
     return data_handler.get_all_from_table('statuses')
 
 
+@app.route("/create-card", methods=["GET", "POST"])
+@json_response
+def create_card():
+    data = request.get_json()
+    data_handler.create_card(data["board_id"], data["status_id"])
+    return data_handler.get_all_from_table('cards')
+
+
 @app.route("/rename", methods=['GET', 'POST'])
 @json_response
 def rename():

@@ -12,24 +12,20 @@ export let dom = {
         });
     },
     showBoards: function (boards, callback) {
-        // shows boards appending them to #boards div
-        // it adds necessary event listeners also
-
-        let boardList = '';
 
         for (let board of boards) {
             const outerHtml = `
             <section class="board">
-                <div class="board-header" id="board${board.id}"><span class="board-title" id="${board.id}">${board.title}</span>
-                    <button class="board-add">Add Card</button>
+                <div class="board-header"><span class="board-title">${board.title}</span>
+                    <button class="board-add" data-board-id="${board.id}">Add Card</button>
                     <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
                 </div>
             <div class="board-columns"  data-id="${board.id}"></div>
             </section>
         `;
-
             let boardsContainer = document.querySelector('.board-container');
             boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
+            document.querySelector("[data-board-id=" + CSS.escape(board.id) + "]").addEventListener('click', dom.createCard);
             dom.renameBoard(board.id, board.title);
         }
         callback();
@@ -65,6 +61,13 @@ export let dom = {
             let cardContainer = document.querySelector("[data-status-id=" + CSS.escape(card.status_id) + "]");
             cardContainer.insertAdjacentHTML("beforeend", outerHtml);
         }
+    },
+    createCard: function (event) {
+        let board_id = this.dataset.boardId;
+        let status_id = document.querySelector("[data-id=" + CSS.escape(board_id) + "]").querySelector('.board-column-content').dataset.statusId;
+        dataHandler.createNewCard(board_id, status_id, function (cards) {
+            dom.showCards(cards)
+        })
     },
     renameBoard: function (id, title) {
         let boardTitle = document.getElementById(`${id}`);
