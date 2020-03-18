@@ -22,7 +22,7 @@ CREATE TABLE cards (
     board_id integer NOT NULL,
     title text DEFAULT 'Undefined',
     status_id integer NOT NULL,
-    "order" integer NOT NULL
+    "order" serial NOT NULL
 );
 
 ALTER TABLE cards
