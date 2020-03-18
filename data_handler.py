@@ -2,6 +2,8 @@ from psycopg2._psycopg import cursor
 
 import persistence
 from psycopg2.extras import RealDictCursor
+
+
 # def get_card_status(status_id):
 #     """
 #     Find the first status matching the given id
@@ -76,18 +78,18 @@ def get_cards_by_status_id(cursor: RealDictCursor, status_id) -> list:
     WHERE status_id = {}'''.format(status_id)
     cursor.execute(query)
     return cursor.fetchall()
-  
-  
+
+
 @persistence.connection_handler
 def create_new_board(cursor, title, id):
     cursor.execute("""
                     INSERT INTO boards
                     VALUES (%(id)s, %(title)s)
-                    """,{'title': title,'id':id})
-    return 'done'
+                    """, {'title': title, 'id': id})
+
 
 @persistence.connection_handler
-def get_last_board(cursor:RealDictCursor):
+def get_last_board(cursor: RealDictCursor):
     query = """
                     SELECT id, title FROM boards
                     ORDER BY id DESC
@@ -95,7 +97,7 @@ def get_last_board(cursor:RealDictCursor):
                     """
     cursor.execute(query)
     return cursor.fetchall()
-  
+
 
 @persistence.connection_handler
 def create_card(cursor: RealDictCursor, board_id, status_id):
@@ -106,6 +108,15 @@ def create_card(cursor: RealDictCursor, board_id, status_id):
 
 
 @persistence.connection_handler
+def create_status(cursor: RealDictCursor, board_id):
+    query = '''
+    INSERT INTO statuses (title, board_id)
+    VALUES ('new', %(board_id)s), ('in progress', %(board_id)s), ('testing', %(board_id)s), 
+    ('done', %(board_id)s);'''
+    cursor.execute(query, {"board_id": board_id})
+
+
+@persistence.connection_handler
 def rename_board(cursor: RealDictCursor, title, id):
     query = '''
     UPDATE boards
@@ -113,4 +124,3 @@ def rename_board(cursor: RealDictCursor, title, id):
     WHERE id = %(id)s'''
     cursor.execute(query, {"title": title, "id": id})
     return 'done'
-
