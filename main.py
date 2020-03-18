@@ -1,4 +1,5 @@
 from flask import Flask, render_template, url_for, request, jsonify
+
 from util import json_response
 
 import data_handler
@@ -29,6 +30,19 @@ def get_statuses():
     return data_handler.get_all_from_table('statuses')
 
 
+@app.route('/create-new-board', methods=['GET','POST'])
+@json_response
+def create_new_board():
+    data = request.get_json()
+    print(data['title'])
+    response = data_handler.create_new_board(data['title'], data['id'])
+    top_board = data_handler.get_last_board()
+    print(top_board)
+
+
+    return top_board
+
+  
 @app.route("/create-card", methods=["GET", "POST"])
 @json_response
 def create_card():
@@ -43,6 +57,7 @@ def rename():
     data = request.get_json()
     response = data_handler.rename_board(data["title"], data["id"])
     return response
+
 
 
 def main():
