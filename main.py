@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request, jsonify
 from util import json_response
 
 import data_handler
@@ -27,6 +27,15 @@ def get_all_cards():
 @json_response
 def get_statuses():
     return data_handler.get_all_from_table('statuses')
+
+
+@app.route("/rename", methods=['GET', 'POST'])
+@json_response
+def rename():
+    data = request.get_json()
+    print(data)
+    # data_handler.rename_board(data[0], data[1])
+    return jsonify(data_handler.get_all_from_table('statuses'))
 
 
 def main():

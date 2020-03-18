@@ -20,7 +20,7 @@ export let dom = {
         for (let board of boards) {
             const outerHtml = `
             <section class="board">
-                <div class="board-header"><span class="board-title">${board.title}</span>
+                <div class="board-header" id="board${board.id}"><span class="board-title" id="${board.id}">${board.title}</span>
                     <button class="board-add">Add Card</button>
                     <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
                 </div>
@@ -30,6 +30,7 @@ export let dom = {
 
             let boardsContainer = document.querySelector('.board-container');
             boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
+            dom.renameBoard(board.id, board.title);
         }
         callback();
     },
@@ -40,16 +41,16 @@ export let dom = {
     },
     showStatuses: function (statuses, callback) {
         for (let status of statuses) {
-             const outerHtml = `
+            const outerHtml = `
             <div class="board-column">
                 <div class="board-column-title">${status.title}</div>
                 <div class="board-column-content" data-status-id="${status.id}">
                 </div>
             </div>
              `;
-             let statusContainerBoard = document.querySelector("[data-id=" + CSS.escape(status.board_id) + "]");
-             statusContainerBoard.insertAdjacentHTML("beforeend", outerHtml);
-         }
+            let statusContainerBoard = document.querySelector("[data-id=" + CSS.escape(status.board_id) + "]");
+            statusContainerBoard.insertAdjacentHTML("beforeend", outerHtml);
+        }
         callback();
     },
     loadCards: function () {
@@ -65,5 +66,35 @@ export let dom = {
             cardContainer.insertAdjacentHTML("beforeend", outerHtml);
         }
     },
-    // here comes more features
+    renameBoard: function (id, title) {
+        let boardTitle = document.getElementById(`${id}`);
+
+        boardTitle.addEventListener('click', () => {
+
+            let boardDiv = document.getElementById(`board${id}`);
+
+            boardDiv.removeChild(boardTitle);
+
+            boardTitle = `<input class="board-title" id="${id}" value="${title}">
+                          <button id="rename" type="submit" value="Submit">Submit</button>`;
+
+            boardDiv.insertAdjacentHTML("afterbegin", boardTitle);
+
+            document.getElementById('rename').addEventListener('click', () => {
+
+                let title = document.getElementById(`${id}`).value;
+
+                let data = [title, id];
+
+                dataHandler._api_post('/rename', data, (response) => {
+                    console.log(response);
+                });
+
+            document.getElementById(`${id}`).addEventListener('mouseout', () => {
+                console.log('out');
+            })
+
+            })
+        })
+    }
 };
