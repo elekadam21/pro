@@ -76,7 +76,8 @@ def get_cards_by_status_id(cursor: RealDictCursor, status_id) -> list:
     WHERE status_id = {}'''.format(status_id)
     cursor.execute(query)
     return cursor.fetchall()
-
+  
+  
 @persistence.connection_handler
 def create_new_board(cursor, title, id):
     cursor.execute("""
@@ -94,3 +95,22 @@ def get_last_board(cursor:RealDictCursor):
                     """
     cursor.execute(query)
     return cursor.fetchall()
+  
+
+@persistence.connection_handler
+def create_card(cursor: RealDictCursor, board_id, status_id):
+    query = '''
+    INSERT INTO cards (board_id, status_id)
+    VALUES (%(board_id)s, %(status_id)s)'''
+    cursor.execute(query, {"board_id": board_id, "status_id": status_id})
+
+
+@persistence.connection_handler
+def rename_board(cursor: RealDictCursor, title, id):
+    query = '''
+    UPDATE boards
+    SET title = %(title)s
+    WHERE id = %(id)s'''
+    cursor.execute(query, {"title": title, "id": id})
+    return 'done'
+

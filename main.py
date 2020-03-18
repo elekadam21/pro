@@ -1,4 +1,5 @@
-from flask import Flask, render_template, url_for,request, jsonify
+from flask import Flask, render_template, url_for, request, jsonify
+
 from util import json_response
 
 import data_handler
@@ -41,9 +42,26 @@ def create_new_board():
 
     return top_board
 
+  
+@app.route("/create-card", methods=["GET", "POST"])
+@json_response
+def create_card():
+    data = request.get_json()
+    data_handler.create_card(data["board_id"], data["status_id"])
+    return data_handler.get_all_from_table('cards')
+
+
+@app.route("/rename", methods=['GET', 'POST'])
+@json_response
+def rename():
+    data = request.get_json()
+    response = data_handler.rename_board(data["title"], data["id"])
+    return response
+
+
 
 def main():
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
 
     # Serving the favicon
     with app.app_context():
