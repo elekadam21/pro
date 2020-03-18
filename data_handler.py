@@ -76,3 +76,13 @@ def get_cards_by_status_id(cursor: RealDictCursor, status_id) -> list:
     WHERE status_id = {}'''.format(status_id)
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@persistence.connection_handler
+def rename_board(cursor: RealDictCursor, title, id):
+    query = '''
+    UPDATE boards
+    SET title = %(title)s
+    WHERE id = %(id)s'''
+    cursor.execute(query, {"title": title, "id": id})
+    return 'done'
