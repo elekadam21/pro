@@ -33,9 +33,8 @@ def get_statuses():
 @json_response
 def rename():
     data = request.get_json()
-    print(data)
-    # data_handler.rename_board(data[0], data[1])
-    return jsonify(data_handler.get_all_from_table('statuses'))
+    data_handler.rename_board(data["title"], data["id"])
+    return jsonify(data_handler.get_all_from_table('boards'))
 
 
 def main():

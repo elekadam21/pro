@@ -18,9 +18,14 @@ export let dataHandler = {
     },
     _api_post: function (url, data, callback) {
         console.log(data);
+        console.log(url);
         fetch(url, {
             method: 'POST',
             credentials: 'same-origin',
+            headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+            },
             body: JSON.stringify(data)
         })
             .then(response => response.json())  // parse the response as JSON

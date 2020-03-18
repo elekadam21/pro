@@ -84,9 +84,9 @@ export let dom = {
 
                 let title = document.getElementById(`${id}`).value;
 
-                let data = [title, id];
+                let data = {"title": title, "id": id};
 
-                dataHandler._api_post('/rename', data, (response) => {
+                dataHandler._api_post('http://127.0.0.1:5000/rename', data, (response) => {
                     console.log(response);
                 });
 
