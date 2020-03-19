@@ -133,3 +133,7 @@ section.board{
 .card-title{
     padding-right: 16px;
 }
+
+.add-board {
+    text-align: center;
+}
