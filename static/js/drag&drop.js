@@ -1,7 +1,8 @@
+import {dataHandler} from "./data_handler.js";
+
 export let drag = {
     initDragAndDrop: function () {
         let cards = document.querySelectorAll('.card');
-        console.log(cards);
         let cardSlots = document.querySelectorAll('.board-column-content');
         initCards(cards);
         initCardSlots(cardSlots);
@@ -35,21 +36,24 @@ function initSlot(slot) {
 
 
 function dragStart(e) {
-    setSlotHighlight();
     this.classList.add('dragged');
     e.dataTransfer.setData("card", e.target.className);
 }
 
 
 function dragEnd() {
-    setSlotHighlight(false);
     this.classList.remove('dragged');
+    let oldId = this.id;
+    let newId = this.parentNode.dataset.status;
+    let data = {'new_id': newId, 'old_id': oldId};
+    dataHandler._api_post('http://127.0.0.1:5000/drag&drop', data, (response) => {
+        let res = response;
+    })
 }
 
 
 function DragEnter(e) {
     if (e.dataTransfer.types.includes("card")) {
-        this.classList.add("hover");
         e.preventDefault();
     }
 }
@@ -61,7 +65,6 @@ function DragOver(e) {
 
 
 function DragLeave(e) {
-    this.classList.remove("hover");
 }
 
 
@@ -70,18 +73,5 @@ function DragDrop(e) {
         let cardElement = document.querySelector('.dragged');
         e.currentTarget.appendChild(cardElement);
         e.preventDefault();
-    }
-}
-
-
-function setSlotHighlight(highlight = true) {
-    const slots = document.querySelectorAll(".card-slot, .mixed-cards");
-    for (const slot of slots) {
-        if (highlight) {
-            slot.classList.add("active-zone");
-        } else {
-            slot.classList.remove("active-zone");
-            slot.classList.remove("hover");
-        }
     }
 }

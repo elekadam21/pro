@@ -1,4 +1,5 @@
 from flask import Flask, render_template, url_for, request, jsonify
+
 from util import json_response
 
 import data_handler
@@ -29,12 +30,48 @@ def get_statuses():
     return data_handler.get_all_from_table('statuses')
 
 
+@app.route('/create-new-board', methods=['GET', 'POST'])
+@json_response
+def create_new_board():
+    data = request.get_json()
+    data_handler.create_new_board()
+    top_board = data_handler.get_last_board()
+    data_handler.create_status(top_board[0]['id'])
+    return top_board
+
+
+@app.route("/create-card", methods=["GET", "POST"])
+@json_response
+def create_card():
+    data = request.get_json()
+    data_handler.create_card(data["board_id"], data["status_id"])
+    return data_handler.get_all_from_table('cards')
+
+
+@app.route("/delete-card", methods=["GET", "POST"])
+@json_response
+def delete_card():
+    card_id = request.get_json()
+    print(card_id)
+    response = data_handler.delete_card(card_id)
+    return response
+
+
 @app.route("/rename", methods=['GET', 'POST'])
 @json_response
 def rename():
     data = request.get_json()
     response = data_handler.rename_board(data["title"], data["id"])
     return response
+
+
+@app.route('/drag&drop', methods=['GET', 'POST'])
+@json_response
+def drag_and_drop():
+    data = request.get_json()
+    response = data_handler.update_status(data['new_id'], data['old_id'])
+    return response
+
 
 
 def main():
