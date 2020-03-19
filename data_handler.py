@@ -137,6 +137,16 @@ def rename_board(cursor: RealDictCursor, title, id):
 
 
 @persistence.connection_handler
+def update_status(cursor: RealDictCursor, new_id, old_id):
+    query = '''
+    UPDATE cards
+    SET status_id = %(new_id)s
+    WHERE id = %(old_id)s'''
+    cursor.execute(query, {"new_id": new_id, "old_id": old_id})
+    return 'done'
+
+
+@persistence.connection_handler
 def rename_status(cursor: RealDictCursor, title, id):
     query = '''
     UPDATE statuses

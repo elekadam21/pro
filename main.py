@@ -39,7 +39,7 @@ def create_new_board():
     data_handler.create_status(top_board[0]['id'])
     return top_board
 
-  
+
 @app.route("/create-card", methods=["GET", "POST"])
 @json_response
 def create_card():
@@ -64,6 +64,13 @@ def rename():
     response = data_handler.rename_board(data["title"], data["id"])
     return response
 
+
+@app.route('/drag&drop', methods=['GET', 'POST'])
+@json_response
+def drag_and_drop():
+    data = request.get_json()
+    response = data_handler.update_status(data['new_id'], data['old_id'])
+    return response
 
 
 @app.route("/rename-status", methods=['GET', 'POST'])

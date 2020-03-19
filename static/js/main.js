@@ -1,4 +1,4 @@
-import { dom } from "./dom.js";
+import {dom} from "./dom.js"
 
 // This function is to initialize the application
 function init() {
@@ -8,7 +8,6 @@ function init() {
     dom.loadBoards();
     dom.createAddBoardButton();
     dom.addBoard();
-
 }
 
 init();

@@ -1,5 +1,6 @@
 // It uses data_handler.js to visualize elements
 import {dataHandler} from "./data_handler.js";
+import {drag} from "./drag&drop.js";
 
 export let dom = {
     init: function () {
@@ -45,10 +46,8 @@ export let dom = {
         for (let status of statuses) {
             const outerHtml = `
             <div class="board-column">
-                <div class="board-column-title" id="status${status.id}">${status.title}</div>
-                <div class="board-column-content" data-status-id="${status.id}">
-                </div>
-            </div>
+                <div class="board-column-title">${status.title}</div>
+                <div class="board-column-content" data-status-id="${status.id}" data-status="${status.id}" id="status${status.id}"></div>
              `;
             let statusContainerBoard = document.querySelector("[data-id=" + CSS.escape(status.board_id) + "]");
             statusContainerBoard.insertAdjacentHTML("beforeend", outerHtml);
@@ -67,25 +66,23 @@ export let dom = {
             status.innerHTML = "";
         }
         for (let card of cards) {
-            const outerHtml = `
-                        <div class="card" id="${card.id}">
-                            <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
-                            <div class="card-title" id="card${card.id}">${card.title}</div>
-                        </div>`;
+            const outerHtml = `<div class="card" id="${card.id}">
+                                    <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
+                                    <div class="card-title">${card.title}</div>
+                               </div>`;
             let cardContainer = document.querySelector("[data-status-id=" + CSS.escape(card.status_id) + "]");
             cardContainer.insertAdjacentHTML("beforeend", outerHtml);
-            dom.renameCards(card.id, card.title)
+            drag.initDragAndDrop();
         }
         callback();
     },
     createAddBoardButton: function () {
         let boardsContainer = document.querySelector('.board-container');
-        const addButton = `
-                        <section class="add-board">
-                            <div id="add-board">
-                                <button type="button" id="myBtn">Add new board</button>        
-                            </div>
-                        </section>`;
+        const addButton = `<section class="add-board">
+                                <div id="add-board">
+                                    <button type="button" id="myBtn">Add new board</button>        
+                                </div>
+                            </section>`;
         boardsContainer.insertAdjacentHTML('beforebegin', addButton)
 
     },
@@ -100,7 +97,7 @@ export let dom = {
                                 <button class="board-add" data-board-id="${response[0].id}">Add Card</button>
                                 <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
                             </div>
-                        <div class="board-columns"  data-id="${response[0].id}"></div>
+                        <div class="board-columns" data-id="${response[0].id}"></div>
                         </section>
                     `;
                     let boardsContainer = document.querySelector('.board-container');
