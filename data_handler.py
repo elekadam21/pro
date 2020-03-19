@@ -65,7 +65,8 @@ from psycopg2.extras import RealDictCursor
 def get_all_from_table(cursor: RealDictCursor, table) -> list:
     query = '''
     SELECT *
-    FROM {}'''.format(table)
+    FROM {}
+    ORDER BY id'''.format(table)
     cursor.execute(query)
     return cursor.fetchall()
 
