@@ -137,6 +137,15 @@ def rename_board(cursor: RealDictCursor, title, id):
 
 
 @persistence.connection_handler
+def rename_status(cursor: RealDictCursor, title, id):
+    query = '''
+    UPDATE statuses
+    SET title = %(title)s
+    WHERE id = %(id)s'''
+    cursor.execute(query, {"title": title, "id": id})
+    return 'done'
+
+  
 def add_status(cursor: RealDictCursor, board_id):
     query = '''
     INSERT INTO statuses (board_id)
@@ -154,3 +163,4 @@ def get_last_status(cursor: RealDictCursor) -> list:
     )'''
     cursor.execute(query)
     return cursor.fetchall()
+

@@ -45,13 +45,14 @@ export let dom = {
         for (let status of statuses) {
             const outerHtml = `
             <div class="board-column">
-                <div class="board-column-title">${status.title}</div>
+                <div class="board-column-title" id="status${status.id}">${status.title}</div>
                 <div class="board-column-content" data-status-id="${status.id}">
                 </div>
             </div>
              `;
             let statusContainerBoard = document.querySelector("[data-id=" + CSS.escape(status.board_id) + "]");
             statusContainerBoard.insertAdjacentHTML("beforeend", outerHtml);
+            dom.renameStatus(status.id, status.title);
         }
         callback();
     },
@@ -120,6 +121,8 @@ export let dom = {
         let boardTitle = document.getElementById(`title${id}`);
         boardTitle.addEventListener('click', () => {
             let boardDiv = document.getElementById(`board${id}`);
+            console.log(boardTitle);
+            console.log(boardDiv);
             boardDiv.removeChild(boardTitle);
             boardTitle = `<input class="board-title" id="title${id}" value="${title}">`;
             boardDiv.insertAdjacentHTML("afterbegin", boardTitle);
@@ -133,6 +136,23 @@ export let dom = {
                     boardDiv.removeChild(boardTitle);
                     boardDiv.insertAdjacentHTML("afterbegin", newTitle);
                     dom.renameBoard(id, title);
+
+                });
+            })
+        })
+    },
+    renameStatus: function (statusId, statusTitleOriginal) {
+        let statusTitle = document.getElementById(`status${statusId}`);
+        statusTitle.addEventListener('click', () => {
+            statusTitle.outerHTML = `<input class="board-column-title" id="status${statusId}" value="${statusTitleOriginal}">`;
+            let inputField = document.getElementById(`status${statusId}`);
+            inputField.addEventListener('focusout', () => {
+                let title = inputField.value;
+                let data = {"title": title, "id": statusId};
+                dataHandler._api_post('http://127.0.0.1:5000/rename-status', data, () => {
+                    let statusTitle = document.getElementById(`status${statusId}`);
+                    statusTitle.outerHTML = `<div class="board-column-title" id="status${statusId}">${title}</div>`;
+                    dom.renameStatus(statusId, title);
 
                 });
             })
