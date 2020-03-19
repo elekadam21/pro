@@ -36,6 +36,10 @@ export let dom = {
         });
     },
     showStatuses: function (statuses, callback) {
+        let boards = document.querySelectorAll('.board-columns');
+        for (let board of boards) {
+            board.innerHTML = "";
+        }
         for (let status of statuses) {
             const outerHtml = `
             <div class="board-column">
@@ -55,6 +59,10 @@ export let dom = {
         })
     },
     showCards: function (cards) {
+        let statuses = document.querySelectorAll('.board-column-content');
+        for (let status of statuses) {
+            status.innerHTML = "";
+        }
         for (let card of cards) {
             const outerHtml = `
             <div class="card">${card.title}</div>`;
@@ -64,42 +72,38 @@ export let dom = {
     },
     createAddBoardButton: function () {
         let boardsContainer = document.querySelector('.board-container');
-
-        const addButton= `
+        const addButton = `
                         <section class="add-board">
                             <div id="add-board">
-                                <button type="button" id="myBtn" >add board</button>        
+                                <button type="button" id="myBtn">Add new board</button>        
                             </div>
-                        </section>
-                                        `;
+                        </section>`;
         boardsContainer.insertAdjacentHTML('beforebegin', addButton)
 
-        },
-    addBoard: function(){
-        let addButton = document.querySelector('#myBtn').addEventListener('click', function(){
-            dataHandler.getBoards(function(boards){
-                let boardId = boards.slice(-1)[0]['id']+1
-                let title = boards.slice(-1)[0]['title'].slice(0,-1)+boardId
-
-            let data = {'title':title, 'id':boardId}
-            dataHandler._api_post('http://127.0.0.1:5000/create-new-board',data,(response)=>{
-                console.log(response[0]['id'])
-                let outerHtml = `
+    },
+    addBoard: function () {
+        let addButton = document.querySelector('#myBtn');
+        addButton.addEventListener('click', function () {
+                let data = 'start';
+                dataHandler._api_post('http://127.0.0.1:5000/create-new-board', data, (response) => {
+                    let outerHtml = `
                         <section class="board">
-                            <div class="board-header"><span class="board-title">${response[0]['title']}</span>
-                                <button class="board-add">Add Card</button>
+                            <div class="board-header" id="board${response[0].id}"><span class="board-title" id="${response[0].id}">${response[0].title}</span>
+                                <button class="board-add" data-board-id="${response[0].id}">Add Card</button>
                                 <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
                             </div>
                         <div class="board-columns"  data-id="${response[0]['id']}"></div>
                         </section>
                     `;
-            let boardsContainer = document.querySelector('.board-container');
-            boardsContainer.insertAdjacentHTML("afterend", outerHtml);
-            })
-            })
-
-
-    createCard: function (event) {
+                    let boardsContainer = document.querySelector('.board-container');
+                    boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
+                    dom.loadStatuses();
+                    dom.renameBoard(response[0].id, response[0].title);
+                    document.querySelector("[data-board-id=" + CSS.escape(response[0].id) + "]").addEventListener('click', dom.createCard);
+                })
+        });
+    },
+    createCard: function () {
         let board_id = this.dataset.boardId;
         let status_id = document.querySelector("[data-id=" + CSS.escape(board_id) + "]").querySelector('.board-column-content').dataset.statusId;
         dataHandler.createNewCard(board_id, status_id, function (cards) {
@@ -108,35 +112,20 @@ export let dom = {
     },
     renameBoard: function (id, title) {
         let boardTitle = document.getElementById(`${id}`);
-
         boardTitle.addEventListener('click', () => {
-
             let boardDiv = document.getElementById(`board${id}`);
-
             boardDiv.removeChild(boardTitle);
-
             boardTitle = `<input class="board-title" id="${id}" value="${title}">`;
-
             boardDiv.insertAdjacentHTML("afterbegin", boardTitle);
-
             let inputField = document.getElementById(`${id}`);
-
             inputField.addEventListener('focusout', () => {
-
                 let title = document.getElementById(`${id}`).value;
-
                 let data = {"title": title, "id": id};
-
                 dataHandler._api_post('http://127.0.0.1:5000/rename', data, () => {
-
                     let boardTitle = document.getElementById(`${id}`);
-
                     let newTitle = `<span class="board-title" id="${id}">${title}</span>`;
-
                     boardDiv.removeChild(boardTitle);
-
                     boardDiv.insertAdjacentHTML("afterbegin", newTitle);
-
                     dom.renameBoard(id, title);
 
                 });
