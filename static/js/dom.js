@@ -55,20 +55,24 @@ export let dom = {
     },
     loadCards: function () {
         dataHandler.getCardsByStatusId(function (cards) {
-            dom.showCards(cards)
+            dom.showCards(cards, dom.deleteCard)
         })
     },
-    showCards: function (cards) {
+    showCards: function (cards, callback) {
         let statuses = document.querySelectorAll('.board-column-content');
         for (let status of statuses) {
             status.innerHTML = "";
         }
         for (let card of cards) {
             const outerHtml = `
-            <div class="card">${card.title}</div>`;
+                        <div class="card" id="${card.id}">
+                            <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
+                            <div class="card-title">${card.title}</div>
+                        </div>`;
             let cardContainer = document.querySelector("[data-status-id=" + CSS.escape(card.status_id) + "]");
             cardContainer.insertAdjacentHTML("beforeend", outerHtml);
         }
+        callback();
     },
     createAddBoardButton: function () {
         let boardsContainer = document.querySelector('.board-container');
@@ -107,7 +111,7 @@ export let dom = {
         let board_id = this.dataset.boardId;
         let status_id = document.querySelector("[data-id=" + CSS.escape(board_id) + "]").querySelector('.board-column-content').dataset.statusId;
         dataHandler.createNewCard(board_id, status_id, function (cards) {
-            dom.showCards(cards)
+            dom.showCards(cards);
         })
     },
     renameBoard: function (id, title) {
@@ -131,5 +135,17 @@ export let dom = {
                 });
             })
         })
+    },
+    deleteCard: function () {
+        let deleteButtons = document.querySelectorAll(".card-remove");
+        console.log(deleteButtons);
+        for (let deleteButton of deleteButtons) {
+            console.log(deleteButton);
+            deleteButton.addEventListener('click', function () {
+                console.log(deleteButton.parentNode.id);
+                let cardId = deleteButton.parentNode.id;
+                dataHandler.deleteCard(cardId)
+            });
+        }
     }
 };
