@@ -82,10 +82,11 @@ export let dom = {
         let addButton = document.querySelector('#myBtn');
         addButton.addEventListener('click', function () {
             dataHandler.getBoards(function (boards) {
-                let boardId = boards.slice(-1)[0]['id'] + 1;
-                let title = boards.slice(-1)[0]['title'].slice(0, -1) + boardId;
-
-                let data = {'title': title, 'id': boardId};
+                // let boardId = boards.slice(-1)[0]['id'] + 1;
+                // let title = boards.slice(-1)[0]['title'].slice(0, -1) + boardId;
+                //
+                // let data = {'title': title, 'id': boardId};
+                let data = 'start';
                 dataHandler._api_post('http://127.0.0.1:5000/create-new-board', data, (response) => {
                     console.log(response);
                     let outerHtml = `

@@ -81,11 +81,11 @@ def get_cards_by_status_id(cursor: RealDictCursor, status_id) -> list:
 
 
 @persistence.connection_handler
-def create_new_board(cursor, title, id):
+def create_new_board(cursor):
     cursor.execute("""
-    INSERT INTO boards
-    VALUES (%(id)s, %(title)s)
-    """, {'title': title, 'id': id})
+    INSERT INTO boards (owner)
+    VALUES (0)
+    """)
 
 
 @persistence.connection_handler

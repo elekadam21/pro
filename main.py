@@ -34,10 +34,10 @@ def get_statuses():
 @json_response
 def create_new_board():
     data = request.get_json()
-    data_handler.create_new_board(data['title'], data['id'])
+    # data_handler.create_new_board(data['title'], data['id'])
+    data_handler.create_new_board()
     # data_handler.create_status(data['id'])
     top_board = data_handler.get_last_board()
-    print(top_board)
     return top_board
 
   
