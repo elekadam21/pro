@@ -118,6 +118,7 @@ def delete_card(cursor: RealDictCursor, card_id):
     return 'done'
 
 
+@persistence.connection_handler
 def create_status(cursor: RealDictCursor, board_id):
     query = '''
     INSERT INTO statuses (title, board_id)

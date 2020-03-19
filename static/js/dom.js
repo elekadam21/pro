@@ -16,7 +16,7 @@ export let dom = {
         for (let board of boards) {
             const outerHtml = `
             <section class="board">
-                <div class="board-header" id="board${board.id}"><span class="board-title" id="${board.id}">${board.title}</span>
+                <div class="board-header" id="board${board.id}"><span class="board-title" id="title${board.id}">${board.title}</span>
                     <button class="board-add" data-board-id="${board.id}">Add Card</button>
                     <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
                 </div>
@@ -92,11 +92,11 @@ export let dom = {
                 dataHandler._api_post('http://127.0.0.1:5000/create-new-board', data, (response) => {
                     let outerHtml = `
                         <section class="board">
-                            <div class="board-header" id="board${response[0].id}"><span class="board-title" id="${response[0].id}">${response[0].title}</span>
+                            <div class="board-header" id="board${response[0].id}"><span class="board-title" id="title${response[0].id}">${response[0].title}</span>
                                 <button class="board-add" data-board-id="${response[0].id}">Add Card</button>
                                 <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
                             </div>
-                        <div class="board-columns"  data-id="${response[0]['id']}"></div>
+                        <div class="board-columns"  data-id="${response[0].id}"></div>
                         </section>
                     `;
                     let boardsContainer = document.querySelector('.board-container');
@@ -111,23 +111,23 @@ export let dom = {
         let board_id = this.dataset.boardId;
         let status_id = document.querySelector("[data-id=" + CSS.escape(board_id) + "]").querySelector('.board-column-content').dataset.statusId;
         dataHandler.createNewCard(board_id, status_id, function (cards) {
-            dom.showCards(cards);
+            dom.loadCards();
         })
     },
     renameBoard: function (id, title) {
-        let boardTitle = document.getElementById(`${id}`);
+        let boardTitle = document.getElementById(`title${id}`);
         boardTitle.addEventListener('click', () => {
             let boardDiv = document.getElementById(`board${id}`);
             boardDiv.removeChild(boardTitle);
-            boardTitle = `<input class="board-title" id="${id}" value="${title}">`;
+            boardTitle = `<input class="board-title" id="title${id}" value="${title}">`;
             boardDiv.insertAdjacentHTML("afterbegin", boardTitle);
-            let inputField = document.getElementById(`${id}`);
+            let inputField = document.getElementById(`title${id}`);
             inputField.addEventListener('focusout', () => {
-                let title = document.getElementById(`${id}`).value;
+                let title = document.getElementById(`title${id}`).value;
                 let data = {"title": title, "id": id};
                 dataHandler._api_post('http://127.0.0.1:5000/rename', data, () => {
-                    let boardTitle = document.getElementById(`${id}`);
-                    let newTitle = `<span class="board-title" id="${id}">${title}</span>`;
+                    let boardTitle = document.getElementById(`title${id}`);
+                    let newTitle = `<span class="board-title" id="title${id}">${title}</span>`;
                     boardDiv.removeChild(boardTitle);
                     boardDiv.insertAdjacentHTML("afterbegin", newTitle);
                     dom.renameBoard(id, title);
@@ -138,11 +138,8 @@ export let dom = {
     },
     deleteCard: function () {
         let deleteButtons = document.querySelectorAll(".card-remove");
-        console.log(deleteButtons);
         for (let deleteButton of deleteButtons) {
-            console.log(deleteButton);
             deleteButton.addEventListener('click', function () {
-                console.log(deleteButton.parentNode.id);
                 let cardId = deleteButton.parentNode.id;
                 dataHandler.deleteCardDataHandler(cardId, dom.loadCards)
             });
