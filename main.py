@@ -50,6 +50,15 @@ def create_card():
     return data_handler.get_all_from_table('cards')
 
 
+@app.route("/delete-card", methods=["GET", "POST"])
+@json_response
+def delete_card():
+    card_id = request.get_json()
+    print(card_id)
+    response = data_handler.delete_card(card_id)
+    return response
+
+
 @app.route("/rename", methods=['GET', 'POST'])
 @json_response
 def rename():

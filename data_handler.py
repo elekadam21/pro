@@ -107,6 +107,16 @@ def create_card(cursor: RealDictCursor, board_id, status_id):
     cursor.execute(query, {"board_id": board_id, "status_id": status_id})
 
 
+@persistence.connection_handler
+def delete_card(cursor: RealDictCursor, card_id):
+    print('datahandler', card_id)
+    query = '''
+    DELETE FROM cards
+    WHERE id = {}'''.format(card_id)
+    cursor.execute(query)
+    return 'done'
+
+
 # @persistence.connection_handler
 # def create_status(cursor: RealDictCursor, board_id):
 #     query = '''
