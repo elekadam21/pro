@@ -1,3 +1,6 @@
+import {dom} from "./dom.js";
+
+
 export let dataHandler = {
     _data: {},
     _api_get: function (url, callback) {
@@ -56,6 +59,13 @@ export let dataHandler = {
         let data = {"board_id": board_id};
         this._api_post("create-status", data, (response) => {
             callback(response);
+        });
+    },
+    deleteBoard: function (board_id) {
+        let board = document.querySelector(`#boardSection${board_id}`);
+        board.remove();
+        dataHandler._api_post("/delete-board", board_id, (response) => {
+            let res = response;
         });
     }
 };

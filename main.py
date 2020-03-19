@@ -96,6 +96,14 @@ def create_status():
     return data_handler.get_last_status()[0]
 
 
+@app.route("/delete-board", methods=["GET", "POST"])
+@json_response
+def delete_board():
+    board_id = request.get_json()
+    response = data_handler.delete_board(board_id)
+    return response
+
+
 def main():
     app.run(debug=True, port=5000)
 

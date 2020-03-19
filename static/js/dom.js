@@ -10,13 +10,13 @@ export let dom = {
         });
     },
     showBoards: function (boards, callback) {
-
         for (let board of boards) {
             const outerHtml = `
-            <section class="board">
+            <section class="board" id="boardSection${board.id}">
                 <div class="board-header" id="board${board.id}"><span class="board-title" id="title${board.id}">${board.title}</span>
                     <button class="board-add" data-column-id="${board.id}">Add column</button>
                     <button class="board-add" data-board-id="${board.id}">Add Card</button>
+                    <i class="fa fa-trash" id="delete-board-button" aria-hidden="true"></i>
                     <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
                 </div>
             <div class="board-columns"  data-id="${board.id}"></div>
@@ -27,6 +27,7 @@ export let dom = {
             document.querySelector("[data-board-id=" + CSS.escape(board.id) + "]").addEventListener('click', dom.createCard);
             document.querySelector("[data-column-id=" + CSS.escape(board.id) + "]").addEventListener('click', dom.addColumn);
             dom.renameBoard(board.id, board.title);
+            dom.deleteBoard(board.id);
         }
         callback();
     },
@@ -90,10 +91,11 @@ export let dom = {
             let data = 'start';
             dataHandler._api_post('http://127.0.0.1:5000/create-new-board', data, (response) => {
                 let outerHtml = `
-                        <section class="board">
+                        <section class="board" id="boardSection${response[0].id}">
                             <div class="board-header" id="board${response[0].id}"><span class="board-title" id="title${response[0].id}">${response[0].title}</span>
                                 <button class="board-add" data-column-id="${response[0].id}">Add column</button>
                                 <button class="board-add" data-board-id="${response[0].id}">Add Card</button>
+                                <i class="fa fa-trash" id="delete-board-button" aria-hidden="true"></i>
                                 <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
                             </div>
                         <div class="board-columns" data-id="${response[0].id}"></div>
@@ -105,6 +107,7 @@ export let dom = {
                 dom.renameBoard(response[0].id, response[0].title);
                 document.querySelector("[data-board-id=" + CSS.escape(response[0].id) + "]").addEventListener('click', dom.createCard);
                 document.querySelector("[data-column-id=" + CSS.escape(response[0].id) + "]").addEventListener('click', dom.addColumn);
+                dom.deleteBoard(response[0].id);
             })
         });
     },
@@ -119,8 +122,6 @@ export let dom = {
         let boardTitle = document.getElementById(`title${id}`);
         boardTitle.addEventListener('click', () => {
             let boardDiv = document.getElementById(`board${id}`);
-            console.log(boardTitle);
-            console.log(boardDiv);
             boardDiv.removeChild(boardTitle);
             boardTitle = `<input class="board-title" id="title${id}" value="${title}">`;
             boardDiv.insertAdjacentHTML("afterbegin", boardTitle);
@@ -195,5 +196,13 @@ export let dom = {
             drag.initDragAndDrop();
             dom.renameStatus(status.id, status.title)
         })
+    },
+    deleteBoard: function (board_id) {
+        let deleteBoards = document.querySelectorAll("#delete-board-button");
+        for (let deleteBoard of deleteBoards) {
+            deleteBoard.addEventListener('click', function () {
+                dataHandler.deleteBoard(board_id)
+            });
+        }
     }
 };

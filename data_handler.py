@@ -125,3 +125,12 @@ def get_last_status(cursor: RealDictCursor) -> list:
     )'''
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@persistence.connection_handler
+def delete_board(cursor: RealDictCursor, board_id):
+    query = '''
+    DELETE FROM boards
+    WHERE id = {}'''.format(board_id)
+    cursor.execute(query)
+    return 'done'
