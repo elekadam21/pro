@@ -6,7 +6,8 @@ DROP TABLE IF EXISTS boards;
 CREATE TABLE boards (
     id serial NOT NULL PRIMARY KEY,
     title text DEFAULT 'Undefined',
-    owner integer
+    owner integer,
+    open boolean
 );
 
 DROP TABLE IF EXISTS statuses;
@@ -34,7 +35,7 @@ ALTER TABLE cards
 ALTER TABLE statuses
     ADD CONSTRAINT fk_status_board_id FOREIGN KEY (board_id) REFERENCES boards(id) ON DELETE CASCADE;
 
-INSERT INTO boards (title) VALUES ('Board 1'), ('Board 2');
+INSERT INTO boards (title, open) VALUES ('Board 1', 'true'), ('Board 2', 'true');
 
 INSERT INTO statuses (title, board_id) VALUES ('new', 1), ('new', 2), ('in progress', 1), ('in progress', 2), ('testing', 1), ('testing', 2), ('done', 1), ('done', 2);
 

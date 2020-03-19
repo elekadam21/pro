@@ -33,7 +33,7 @@ button{
 }
 
 .board-container{
-    max-width: 960px;
+    max-width: 980px;
     margin: 0 auto;
 }
 
@@ -64,14 +64,20 @@ section.board{
     margin: 13px;
 }
 
-.board-columns{
+[data-open="true"] {
+    width: 940px;
+    margin: 0 auto;
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .board-column{
     padding: 10px;
-    flex: 1;
+    flex-grow: 1;
+    min-width: 200px;
+    max-width: 200px;
+
 }
 
 .board-column-content{
@@ -126,4 +132,12 @@ section.board{
 
 .card-title{
     padding-right: 16px;
+}
+
+[data-open="false"] {
+    width: 940px;
+    margin: 0 auto;
+    display: none;
+    flex-wrap: wrap;
+    justify-content: center;
 }

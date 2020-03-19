@@ -104,6 +104,14 @@ def delete_board():
     return response
 
 
+@app.route("/board-open-close", methods=["GET", "POST"])
+@json_response
+def board_open_close():
+    data = request.get_json()
+    response = data_handler.change_board_open_close(data['boolean'], data['id'])
+    return response
+
+
 def main():
     app.run(debug=True, port=5000)
 

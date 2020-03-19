@@ -25,15 +25,15 @@ def get_cards_by_status_id(cursor: RealDictCursor, status_id) -> list:
 @persistence.connection_handler
 def create_new_board(cursor):
     cursor.execute("""
-    INSERT INTO boards (owner)
-    VALUES (0)
+    INSERT INTO boards (open)
+    VALUES ('true')
     """)
 
 
 @persistence.connection_handler
 def get_last_board(cursor: RealDictCursor):
     query = """
-    SELECT id, title FROM boards
+    SELECT id, title, open FROM boards
     ORDER BY id DESC
     LIMIT 1
     """
@@ -133,4 +133,15 @@ def delete_board(cursor: RealDictCursor, board_id):
     DELETE FROM boards
     WHERE id = {}'''.format(board_id)
     cursor.execute(query)
+    return 'done'
+
+
+@persistence.connection_handler
+def change_board_open_close(cursor: RealDictCursor, boolean, id_num):
+    print(boolean, id_num)
+    query = '''
+    UPDATE boards
+    SET open = %(boolean)s
+    WHERE id = %(id_num)s'''
+    cursor.execute(query, {"boolean": boolean, "id_num": id_num})
     return 'done'

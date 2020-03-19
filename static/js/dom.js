@@ -11,15 +11,16 @@ export let dom = {
     },
     showBoards: function (boards, callback) {
         for (let board of boards) {
+            console.log(board.open);
             const outerHtml = `
             <section class="board" id="boardSection${board.id}">
                 <div class="board-header" id="board${board.id}"><span class="board-title" id="title${board.id}">${board.title}</span>
                     <button class="board-add" data-column-id="${board.id}">Add column</button>
                     <button class="board-add" data-board-id="${board.id}">Add Card</button>
-                    <i class="fa fa-trash" id="delete-board-button" aria-hidden="true"></i>
-                    <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
+                    <i class="fa fa-trash" id="delete-board-button${board.id}" aria-hidden="true"></i>
+                    <button class="board-toggle"><i class="fas fa-chevron-down" id="toggle${board.id}"></i></button>
                 </div>
-            <div class="board-columns"  data-id="${board.id}"></div>
+            <div class="board-columns"  data-id="${board.id}" id="col${board.id}" data-open="${board.open}"></div>
             </section>
         `;
             let boardsContainer = document.querySelector('.board-container');
@@ -28,6 +29,7 @@ export let dom = {
             document.querySelector("[data-column-id=" + CSS.escape(board.id) + "]").addEventListener('click', dom.addColumn);
             dom.renameBoard(board.id, board.title);
             dom.deleteBoard(board.id);
+            dom.boardOpenAndClose(board.id)
         }
         callback();
     },
@@ -95,10 +97,10 @@ export let dom = {
                             <div class="board-header" id="board${response[0].id}"><span class="board-title" id="title${response[0].id}">${response[0].title}</span>
                                 <button class="board-add" data-column-id="${response[0].id}">Add column</button>
                                 <button class="board-add" data-board-id="${response[0].id}">Add Card</button>
-                                <i class="fa fa-trash" id="delete-board-button" aria-hidden="true"></i>
-                                <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
+                                <i class="fa fa-trash" id="delete-board-button${response[0].id}" aria-hidden="true"></i>
+                                <button class="board-toggle"><i class="fas fa-chevron-down" id="toggle${response[0].id}"></i></button>
                             </div>
-                        <div class="board-columns" data-id="${response[0].id}"></div>
+                            <div class="board-columns" data-id="${response[0].id}" id="col${response[0].id}" data-open="${response[0].open}"></div>
                         </section>
                     `;
                 let boardsContainer = document.querySelector('.board-container');
@@ -108,6 +110,7 @@ export let dom = {
                 document.querySelector("[data-board-id=" + CSS.escape(response[0].id) + "]").addEventListener('click', dom.createCard);
                 document.querySelector("[data-column-id=" + CSS.escape(response[0].id) + "]").addEventListener('click', dom.addColumn);
                 dom.deleteBoard(response[0].id);
+                dom.boardOpenAndClose(response[0].id)
             })
         });
     },
@@ -198,11 +201,26 @@ export let dom = {
         })
     },
     deleteBoard: function (board_id) {
-        let deleteBoards = document.querySelectorAll("#delete-board-button");
-        for (let deleteBoard of deleteBoards) {
+        let deleteBoard = document.querySelector(`#delete-board-button${board_id}`);
             deleteBoard.addEventListener('click', function () {
                 dataHandler.deleteBoard(board_id)
             });
-        }
+    },
+    boardOpenAndClose: function (board_id) {
+        let toggle = document.querySelector(`#toggle${board_id}`);
+        let col = document.querySelector(`#col${board_id}`);
+        toggle.addEventListener('click', () => {
+            if (col.dataset.open === 'true') {
+                col.dataset.open = 'false';
+                let data = {'boolean': col.dataset.open, 'id': board_id};
+                dataHandler._api_post('http://127.0.0.1:5000/board-open-close', data, (response) => {
+                });
+            } else {
+                col.dataset.open = 'true';
+                let data = {'boolean': col.dataset.open, 'id': board_id};
+                dataHandler._api_post('http://127.0.0.1:5000/board-open-close', data, (response) => {
+                });
+            }
+        })
     }
 };
