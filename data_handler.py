@@ -135,3 +135,13 @@ def rename_board(cursor: RealDictCursor, title, id):
     WHERE id = %(id)s'''
     cursor.execute(query, {"title": title, "id": id})
     return 'done'
+
+
+@persistence.connection_handler
+def rename_status(cursor: RealDictCursor, title, id):
+    query = '''
+    UPDATE statuses
+    SET title = %(title)s
+    WHERE id = %(id)s'''
+    cursor.execute(query, {"title": title, "id": id})
+    return 'done'

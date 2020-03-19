@@ -65,6 +65,14 @@ def rename():
     return response
 
 
+@app.route("/rename-status", methods=['GET', 'POST'])
+@json_response
+def rename_status():
+    data = request.get_json()
+    response = data_handler.rename_status(data["title"], data["id"])
+    return response
+
+
 def main():
     app.run(debug=True, port=5000)
 
