@@ -65,6 +65,13 @@ def rename():
     return response
 
 
+@app.route("/create-status", methods=["GET", "POST"])
+def create_status():
+    data = request.get_json()
+    data_handler.add_status(data["board_id"])
+    return data_handler.get_last_status()[0]
+
+
 def main():
     app.run(debug=True, port=5000)
 
