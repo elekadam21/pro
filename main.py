@@ -73,6 +73,14 @@ def rename_status():
     return response
 
 
+@app.route("/rename-card", methods=['GET', 'POST'])
+@json_response
+def rename_card():
+    data = request.get_json()
+    response = data_handler.rename_card(data["title"], data["id"])
+    return response
+
+
 def main():
     app.run(debug=True, port=5000)
 

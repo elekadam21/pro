@@ -145,3 +145,13 @@ def rename_status(cursor: RealDictCursor, title, id):
     WHERE id = %(id)s'''
     cursor.execute(query, {"title": title, "id": id})
     return 'done'
+
+
+@persistence.connection_handler
+def rename_card(cursor: RealDictCursor, title, id):
+    query = '''
+    UPDATE cards
+    SET title = %(title)s
+    WHERE id = %(id)s'''
+    cursor.execute(query, {"title": title, "id": id})
+    return 'done'
