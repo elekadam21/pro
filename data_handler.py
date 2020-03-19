@@ -2,6 +2,8 @@ from psycopg2._psycopg import cursor
 
 import persistence
 from psycopg2.extras import RealDictCursor
+
+
 # def get_card_status(status_id):
 #     """
 #     Find the first status matching the given id
@@ -63,7 +65,8 @@ from psycopg2.extras import RealDictCursor
 def get_all_from_table(cursor: RealDictCursor, table) -> list:
     query = '''
     SELECT *
-    FROM {}'''.format(table)
+    FROM {}
+    ORDER BY id'''.format(table)
     cursor.execute(query)
     return cursor.fetchall()
 
@@ -76,6 +79,52 @@ def get_cards_by_status_id(cursor: RealDictCursor, status_id) -> list:
     WHERE status_id = {}'''.format(status_id)
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@persistence.connection_handler
+def create_new_board(cursor):
+    cursor.execute("""
+    INSERT INTO boards (owner)
+    VALUES (0)
+    """)
+
+
+@persistence.connection_handler
+def get_last_board(cursor: RealDictCursor):
+    query = """
+    SELECT id, title FROM boards
+    ORDER BY id DESC
+    LIMIT 1
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@persistence.connection_handler
+def create_card(cursor: RealDictCursor, board_id, status_id):
+    query = '''
+    INSERT INTO cards (board_id, status_id)
+    VALUES (%(board_id)s, %(status_id)s)'''
+    cursor.execute(query, {"board_id": board_id, "status_id": status_id})
+
+
+@persistence.connection_handler
+def delete_card(cursor: RealDictCursor, card_id):
+    print('datahandler', card_id)
+    query = '''
+    DELETE FROM cards
+    WHERE id = {}'''.format(card_id)
+    cursor.execute(query)
+    return 'done'
+
+
+@persistence.connection_handler
+def create_status(cursor: RealDictCursor, board_id):
+    query = '''
+    INSERT INTO statuses (title, board_id)
+    VALUES ('new', %(board_id)s), ('in progress', %(board_id)s), ('testing', %(board_id)s),
+    ('done', %(board_id)s);'''
+    cursor.execute(query, {"board_id": board_id})
 
 
 @persistence.connection_handler
