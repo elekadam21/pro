@@ -107,13 +107,13 @@ def create_card(cursor: RealDictCursor, board_id, status_id):
     cursor.execute(query, {"board_id": board_id, "status_id": status_id})
 
 
-# @persistence.connection_handler
-# def create_status(cursor: RealDictCursor, board_id):
-#     query = '''
-#     INSERT INTO statuses (title, board_id)
-#     VALUES ('new', %(board_id)s), ('in progress', %(board_id)s), ('testing', %(board_id)s),
-#     ('done', %(board_id)s);'''
-#     cursor.execute(query, {"board_id": board_id})
+@persistence.connection_handler
+def create_status(cursor: RealDictCursor, board_id):
+    query = '''
+    INSERT INTO statuses (title, board_id)
+    VALUES ('new', %(board_id)s), ('in progress', %(board_id)s), ('testing', %(board_id)s),
+    ('done', %(board_id)s);'''
+    cursor.execute(query, {"board_id": board_id})
 
 
 @persistence.connection_handler
