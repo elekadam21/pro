@@ -18,6 +18,7 @@ export let dom = {
             const outerHtml = `
             <section class="board">
                 <div class="board-header" id="board${board.id}"><span class="board-title" id="title${board.id}">${board.title}</span>
+                    <button class="board-add" data-column-id="${board.id}">Add column</button>
                     <button class="board-add" data-board-id="${board.id}">Add Card</button>
                     <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
                 </div>
@@ -27,6 +28,7 @@ export let dom = {
             let boardsContainer = document.querySelector('.board-container');
             boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
             document.querySelector("[data-board-id=" + CSS.escape(board.id) + "]").addEventListener('click', dom.createCard);
+            document.querySelector("[data-column-id=" + CSS.escape(board.id) + "]").addEventListener('click', dom.addColumn);
             dom.renameBoard(board.id, board.title);
         }
         callback();
@@ -46,10 +48,10 @@ export let dom = {
             <div class="board-column">
                 <div class="board-column-title">${status.title}</div>
                 <div class="board-column-content" data-status-id="${status.id}" data-status="${status.id}" id="status${status.id}"></div>
-            </div>
              `;
             let statusContainerBoard = document.querySelector("[data-id=" + CSS.escape(status.board_id) + "]");
             statusContainerBoard.insertAdjacentHTML("beforeend", outerHtml);
+            dom.renameStatus(status.id, status.title);
         }
         callback();
     },
@@ -117,6 +119,8 @@ export let dom = {
         let boardTitle = document.getElementById(`title${id}`);
         boardTitle.addEventListener('click', () => {
             let boardDiv = document.getElementById(`board${id}`);
+            console.log(boardTitle);
+            console.log(boardDiv);
             boardDiv.removeChild(boardTitle);
             boardTitle = `<input class="board-title" id="title${id}" value="${title}">`;
             boardDiv.insertAdjacentHTML("afterbegin", boardTitle);
@@ -135,6 +139,40 @@ export let dom = {
             })
         })
     },
+    renameStatus: function (statusId, statusTitleOriginal) {
+        let statusTitle = document.getElementById(`status${statusId}`);
+        statusTitle.addEventListener('click', () => {
+            statusTitle.outerHTML = `<input class="board-column-title" id="status${statusId}" value="${statusTitleOriginal}">`;
+            let inputField = document.getElementById(`status${statusId}`);
+            inputField.addEventListener('focusout', () => {
+                let title = inputField.value;
+                let data = {"title": title, "id": statusId};
+                dataHandler._api_post('http://127.0.0.1:5000/rename-status', data, () => {
+                    let statusTitle = document.getElementById(`status${statusId}`);
+                    statusTitle.outerHTML = `<div class="board-column-title" id="status${statusId}">${title}</div>`;
+                    dom.renameStatus(statusId, title);
+
+                });
+            })
+        })
+    },
+    renameCards: function (cardId, cardTitleOriginal) {
+        let cardTitle = document.getElementById(`card${cardId}`);
+        cardTitle.addEventListener('click', () => {
+            cardTitle.outerHTML = `<input class="card-title" id="card${cardId}" value="${cardTitleOriginal}">`;
+            let inputField = document.getElementById(`card${cardId}`);
+            inputField.addEventListener('focusout', () => {
+                let title = inputField.value;
+                let data = {"title": title, "id": cardId};
+                dataHandler._api_post('http://127.0.0.1:5000/rename-card', data, () => {
+                    let cardTitle = document.getElementById(`card${cardId}`);
+                    cardTitle.outerHTML = `<div class="card-title" id="card${cardId}">${title}</div>`;
+                    dom.renameCards(cardId, title);
+
+                });
+            })
+        })
+    },
     deleteCard: function () {
         let deleteButtons = document.querySelectorAll(".card-remove");
         for (let deleteButton of deleteButtons) {
@@ -143,5 +181,19 @@ export let dom = {
                 dataHandler.deleteCardDataHandler(cardId, dom.loadCards)
             });
         }
+    },
+    addColumn: function () {
+        let board_id = this.dataset.columnId;
+        dataHandler.createColumn(board_id, function (status) {
+            const outerHtml = `
+            <div class="board-column">
+                <div class="board-column-title">${status.title}</div>
+                <div class="board-column-content" data-status-id="${status.id}">
+                </div>
+            </div>
+             `;
+            let colContainer = document.querySelector('[data-id=' + CSS.escape(board_id) + ']');
+            colContainer.insertAdjacentHTML("beforeend", outerHtml);
+        })
     }
 };

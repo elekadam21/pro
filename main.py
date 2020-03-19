@@ -73,6 +73,28 @@ def drag_and_drop():
     return response
 
 
+@app.route("/rename-status", methods=['GET', 'POST'])
+@json_response
+def rename_status():
+    data = request.get_json()
+    response = data_handler.rename_status(data["title"], data["id"])
+    return response
+
+
+@app.route("/rename-card", methods=['GET', 'POST'])
+@json_response
+def rename_card():
+    data = request.get_json()
+    response = data_handler.rename_card(data["title"], data["id"])
+    return response
+
+
+@app.route("/create-status", methods=["GET", "POST"])
+def create_status():
+    data = request.get_json()
+    data_handler.add_status(data["board_id"])
+    return data_handler.get_last_status()[0]
+
 
 def main():
     app.run(debug=True, port=5000)
