@@ -83,18 +83,18 @@ def get_cards_by_status_id(cursor: RealDictCursor, status_id) -> list:
 @persistence.connection_handler
 def create_new_board(cursor, title, id):
     cursor.execute("""
-                    INSERT INTO boards
-                    VALUES (%(id)s, %(title)s)
-                    """, {'title': title, 'id': id})
+    INSERT INTO boards
+    VALUES (%(id)s, %(title)s)
+    """, {'title': title, 'id': id})
 
 
 @persistence.connection_handler
 def get_last_board(cursor: RealDictCursor):
     query = """
-                    SELECT id, title FROM boards
-                    ORDER BY id DESC
-                    LIMIT 1
-                    """
+    SELECT id, title FROM boards
+    ORDER BY id DESC
+    LIMIT 1
+    """
     cursor.execute(query)
     return cursor.fetchall()
 
@@ -107,13 +107,13 @@ def create_card(cursor: RealDictCursor, board_id, status_id):
     cursor.execute(query, {"board_id": board_id, "status_id": status_id})
 
 
-@persistence.connection_handler
-def create_status(cursor: RealDictCursor, board_id):
-    query = '''
-    INSERT INTO statuses (title, board_id)
-    VALUES ('new', %(board_id)s), ('in progress', %(board_id)s), ('testing', %(board_id)s), 
-    ('done', %(board_id)s);'''
-    cursor.execute(query, {"board_id": board_id})
+# @persistence.connection_handler
+# def create_status(cursor: RealDictCursor, board_id):
+#     query = '''
+#     INSERT INTO statuses (title, board_id)
+#     VALUES ('new', %(board_id)s), ('in progress', %(board_id)s), ('testing', %(board_id)s),
+#     ('done', %(board_id)s);'''
+#     cursor.execute(query, {"board_id": board_id})
 
 
 @persistence.connection_handler

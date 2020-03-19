@@ -55,6 +55,10 @@ export let dom = {
         })
     },
     showCards: function (cards) {
+        let statuses = document.querySelectorAll('.board-column-content');
+        for (let status of statuses) {
+            status.innerHTML = "";
+        }
         for (let card of cards) {
             const outerHtml = `
             <div class="card">${card.title}</div>`;
@@ -74,7 +78,7 @@ export let dom = {
         boardsContainer.insertAdjacentHTML('beforebegin', addButton)
 
     },
-    addBoard: function (callback) {
+    addBoard: function () {
         let addButton = document.querySelector('#myBtn');
         addButton.addEventListener('click', function () {
             dataHandler.getBoards(function (boards) {
@@ -96,7 +100,6 @@ export let dom = {
                     let boardsContainer = document.querySelector('.board-container');
                     boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
                     dom.renameBoard(response[0].id, response[0].title);
-                    callback()
                 })
             })
         });
