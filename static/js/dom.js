@@ -70,10 +70,11 @@ export let dom = {
             const outerHtml = `
                         <div class="card" id="${card.id}">
                             <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
-                            <div class="card-title">${card.title}</div>
+                            <div class="card-title" id="card${card.id}">${card.title}</div>
                         </div>`;
             let cardContainer = document.querySelector("[data-status-id=" + CSS.escape(card.status_id) + "]");
             cardContainer.insertAdjacentHTML("beforeend", outerHtml);
+            dom.renameCards(card.id, card.title)
         }
         callback();
     },
@@ -153,6 +154,23 @@ export let dom = {
                     let statusTitle = document.getElementById(`status${statusId}`);
                     statusTitle.outerHTML = `<div class="board-column-title" id="status${statusId}">${title}</div>`;
                     dom.renameStatus(statusId, title);
+
+                });
+            })
+        })
+    },
+    renameCards: function (cardId, cardTitleOriginal) {
+        let cardTitle = document.getElementById(`card${cardId}`);
+        cardTitle.addEventListener('click', () => {
+            cardTitle.outerHTML = `<input class="card-title" id="card${cardId}" value="${cardTitleOriginal}">`;
+            let inputField = document.getElementById(`card${cardId}`);
+            inputField.addEventListener('focusout', () => {
+                let title = inputField.value;
+                let data = {"title": title, "id": cardId};
+                dataHandler._api_post('http://127.0.0.1:5000/rename-card', data, () => {
+                    let cardTitle = document.getElementById(`card${cardId}`);
+                    cardTitle.outerHTML = `<div class="card-title" id="card${cardId}">${title}</div>`;
+                    dom.renameCards(cardId, title);
 
                 });
             })
