@@ -144,7 +144,7 @@ export let dom = {
             deleteButton.addEventListener('click', function () {
                 console.log(deleteButton.parentNode.id);
                 let cardId = deleteButton.parentNode.id;
-                dataHandler.deleteCard(cardId)
+                dataHandler.deleteCardDataHandler(cardId, dom.loadCards)
             });
         }
     }

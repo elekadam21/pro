@@ -72,10 +72,11 @@ export let dataHandler = {
             callback(response);
         });
     },
-    deleteCard: function (card_id, callback) {
+    deleteCardDataHandler: function (card_id, callback) {
         dataHandler._api_post("/delete-card", card_id, (response) => {
             callback(response);
         });
+        callback();
     }
     // here comes more features
 };
