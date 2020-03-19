@@ -126,11 +126,14 @@ export let dom = {
         boardTitle.addEventListener('click', () => {
             let boardDiv = document.getElementById(`board${id}`);
             boardDiv.removeChild(boardTitle);
-            boardTitle = `<input class="board-title" id="title${id}" value="${title}">`;
+            boardTitle = `<input class="board-title" id="title${id}" value="${title}" maxlength="16">`;
             boardDiv.insertAdjacentHTML("afterbegin", boardTitle);
             let inputField = document.getElementById(`title${id}`);
             inputField.addEventListener('focusout', () => {
                 let title = document.getElementById(`title${id}`).value;
+                if (title === '') {
+                    title = 'unnamed'
+                }
                 let data = {"title": title, "id": id};
                 dataHandler._api_post('http://127.0.0.1:5000/rename', data, () => {
                     let boardTitle = document.getElementById(`title${id}`);
@@ -146,10 +149,13 @@ export let dom = {
     renameStatus: function (statusId, statusTitleOriginal) {
         let statusTitle = document.getElementById(`status${statusId}`);
         statusTitle.addEventListener('click', () => {
-            statusTitle.outerHTML = `<input class="board-column-title" id="status${statusId}" value="${statusTitleOriginal}">`;
+            statusTitle.outerHTML = `<input class="board-column-title" id="status${statusId}" value="${statusTitleOriginal}" maxlength="16">`;
             let inputField = document.getElementById(`status${statusId}`);
             inputField.addEventListener('focusout', () => {
                 let title = inputField.value;
+                if (title === '') {
+                    title = 'unnamed'
+                }
                 let data = {"title": title, "id": statusId};
                 dataHandler._api_post('http://127.0.0.1:5000/rename-status', data, () => {
                     let statusTitle = document.getElementById(`status${statusId}`);
@@ -163,10 +169,13 @@ export let dom = {
     renameCards: function (cardId, cardTitleOriginal) {
         let cardTitle = document.getElementById(`card${cardId}`);
         cardTitle.addEventListener('click', () => {
-            cardTitle.outerHTML = `<input class="card-title" id="card${cardId}" value="${cardTitleOriginal}">`;
+            cardTitle.outerHTML = `<input class="card-title" id="card${cardId}" value="${cardTitleOriginal}" style="width: 150px">`;
             let inputField = document.getElementById(`card${cardId}`);
             inputField.addEventListener('focusout', () => {
                 let title = inputField.value;
+                if (title === '') {
+                    title = 'unnamed'
+                }
                 let data = {"title": title, "id": cardId};
                 dataHandler._api_post('http://127.0.0.1:5000/rename-card', data, () => {
                     let cardTitle = document.getElementById(`card${cardId}`);

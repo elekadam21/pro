@@ -9,6 +9,7 @@
 body{
     min-width: 620px;
     background: #ddd url(http://cdn.backgroundhost.com/backgrounds/subtlepatterns/diagonal-noise.png);
+    max-width: 90%;
     font-family: sans-serif;
 }
 
@@ -132,6 +133,11 @@ section.board{
 
 .card-title{
     padding-right: 16px;
+    word-wrap: break-word;
+}
+
+.add-board {
+    text-align: center;
 }
 
 [data-open="false"] {
