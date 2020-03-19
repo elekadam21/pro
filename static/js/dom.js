@@ -17,6 +17,7 @@ export let dom = {
             const outerHtml = `
             <section class="board">
                 <div class="board-header" id="board${board.id}"><span class="board-title" id="title${board.id}">${board.title}</span>
+                    <button class="board-add" data-column-id="${board.id}">Add column</button>
                     <button class="board-add" data-board-id="${board.id}">Add Card</button>
                     <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
                 </div>
@@ -26,6 +27,7 @@ export let dom = {
             let boardsContainer = document.querySelector('.board-container');
             boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
             document.querySelector("[data-board-id=" + CSS.escape(board.id) + "]").addEventListener('click', dom.createCard);
+            document.querySelector("[data-column-id=" + CSS.escape(board.id) + "]").addEventListener('click', dom.addColumn);
             dom.renameBoard(board.id, board.title);
         }
         callback();
@@ -144,5 +146,19 @@ export let dom = {
                 dataHandler.deleteCardDataHandler(cardId, dom.loadCards)
             });
         }
+    },
+    addColumn: function () {
+        let board_id = this.dataset.columnId;
+        dataHandler.createColumn(board_id, function (status) {
+            const outerHtml = `
+            <div class="board-column">
+                <div class="board-column-title">${status.title}</div>
+                <div class="board-column-content" data-status-id="${status.id}">
+                </div>
+            </div>
+             `;
+            let colContainer = document.querySelector('[data-id=' + CSS.escape(board_id) + ']');
+            colContainer.insertAdjacentHTML("beforeend", outerHtml);
+        })
     }
 };
