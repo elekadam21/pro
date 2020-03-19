@@ -110,7 +110,6 @@ def create_card(cursor: RealDictCursor, board_id, status_id):
 
 @persistence.connection_handler
 def delete_card(cursor: RealDictCursor, card_id):
-    print('datahandler', card_id)
     query = '''
     DELETE FROM cards
     WHERE id = {}'''.format(card_id)
@@ -146,7 +145,6 @@ def rename_status(cursor: RealDictCursor, title, id):
     cursor.execute(query, {"title": title, "id": id})
     return 'done'
 
-
 @persistence.connection_handler
 def rename_card(cursor: RealDictCursor, title, id):
     query = '''
@@ -155,3 +153,22 @@ def rename_card(cursor: RealDictCursor, title, id):
     WHERE id = %(id)s'''
     cursor.execute(query, {"title": title, "id": id})
     return 'done'
+
+@persistence.connection_handler
+def add_status(cursor: RealDictCursor, board_id):
+    query = '''
+    INSERT INTO statuses (board_id)
+    VALUES (%(board_id)s)'''
+    cursor.execute(query, {"board_id": board_id})
+
+
+@persistence.connection_handler
+def get_last_status(cursor: RealDictCursor) -> list:
+    query = '''
+    SELECT * 
+    FROM statuses 
+    WHERE id=(
+    SELECT max(id) FROM statuses
+    )'''
+    cursor.execute(query)
+    return cursor.fetchall()

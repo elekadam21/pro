@@ -77,6 +77,12 @@ export let dataHandler = {
             callback(response);
         });
         callback();
+    },
+    createColumn: function (board_id, callback) {
+        let data = {"board_id": board_id};
+        this._api_post("create-status", data, (response) => {
+            callback(response);
+        });
     }
     // here comes more features
 };
