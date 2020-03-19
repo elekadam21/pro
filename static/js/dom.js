@@ -84,7 +84,6 @@ export let dom = {
     addBoard: function () {
         let addButton = document.querySelector('#myBtn');
         addButton.addEventListener('click', function () {
-            dataHandler.getBoards(function () {
                 let data = 'start';
                 dataHandler._api_post('http://127.0.0.1:5000/create-new-board', data, (response) => {
                     let outerHtml = `
@@ -102,7 +101,6 @@ export let dom = {
                     dom.renameBoard(response[0].id, response[0].title);
                     document.querySelector("[data-board-id=" + CSS.escape(response[0].id) + "]").addEventListener('click', dom.createCard);
                 })
-            })
         });
     },
     createCard: function () {
