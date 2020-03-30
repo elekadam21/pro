@@ -1,6 +1,7 @@
 ALTER TABLE IF EXISTS ONLY cards DROP CONSTRAINT IF EXISTS fk_card_board_id CASCADE;
 ALTER TABLE IF EXISTS ONLY cards DROP CONSTRAINT IF EXISTS fk_card_status_id CASCADE;
 ALTER TABLE IF EXISTS ONLY statuses DROP CONSTRAINT IF EXISTS fk_status_board_id CASCADE;
+ALTER TABLE IF EXISTS ONLY users DROP CONSTRAINT IF EXISTS fk_users_board_id CASCADE;
 
 DROP TABLE IF EXISTS boards;
 CREATE TABLE boards (
@@ -26,6 +27,14 @@ CREATE TABLE cards (
     "order" serial NOT NULL
 );
 
+DROP TABLE IF EXISTS users;
+CREATE TABLE users (
+    id serial NOT NULL PRIMARY KEY,
+    username text,
+    password text,
+    email_address text
+);
+
 ALTER TABLE cards
     ADD CONSTRAINT fk_card_board_id FOREIGN KEY (board_id) REFERENCES boards(id) ON DELETE CASCADE;
 
@@ -34,6 +43,9 @@ ALTER TABLE cards
 
 ALTER TABLE statuses
     ADD CONSTRAINT fk_status_board_id FOREIGN KEY (board_id) REFERENCES boards(id) ON DELETE CASCADE;
+
+ALTER TABLE boards
+    ADD CONSTRAINT fk_board_user_id FOREIGN KEY (owner) REFERENCES users(id) ON DELETE CASCADE;
 
 INSERT INTO boards (title, open) VALUES ('Board 1', 'true'), ('Board 2', 'true');
 
@@ -51,3 +63,8 @@ INSERT INTO cards (board_id, title, status_id, "order") VALUES (1, 'new cad 1', 
                          (2, 'planning', 7, 0),
                          (2, 'done card 1', 8, 0),
                          (2, 'done card 2', 8, 1);
+
+INSERT INTO users (username, password, email_address) VALUES ('Gergő', '$2b$12$oeYCEw3yzM27qdN3DmsADOu26BDuh4jywTx7Ky07sE9XOnsJXDpPK', 'gergő@admin.com'),
+                                                             ('Joel', '$2b$12$z3eXMhfgs1cF2GkuVDngwO81C.4lIr6AxBpvkCTJqqpbGMPZ4Bbwm', 'joel@admi.com'),
+                                                             ('Adam', '$2b$12$Ec6L63fOL.CZ5v/MMm6EI.fdryBMSbAQx43VAm6xzyK5NqR79fcJ.', 'adam@admin.com'),
+                                                             ('Alex', '$2b$12$g953xJ8xSmKZMZGAdphV0eI7aTAk5qe3d5VjQtdhuR/Ql9NeiMnC2', 'alex@admin.com');
