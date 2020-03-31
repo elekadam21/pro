@@ -65,6 +65,6 @@ INSERT INTO cards (board_id, title, status_id, "order") VALUES (1, 'new cad 1', 
                          (2, 'done card 2', 8, 1);
 
 INSERT INTO users (username, password, email_address) VALUES ('Gergő', '$2b$12$oeYCEw3yzM27qdN3DmsADOu26BDuh4jywTx7Ky07sE9XOnsJXDpPK', 'gergő@admin.com'),
-                                                             ('Joel', '$2b$12$z3eXMhfgs1cF2GkuVDngwO81C.4lIr6AxBpvkCTJqqpbGMPZ4Bbwm', 'joel@admi.com'),
+                                                             ('Joel', '$2b$12$z3eXMhfgs1cF2GkuVDngwO81C.4lIr6AxBpvkCTJqqpbGMPZ4Bbwm', 'joel@admin.com'),
                                                              ('Adam', '$2b$12$Ec6L63fOL.CZ5v/MMm6EI.fdryBMSbAQx43VAm6xzyK5NqR79fcJ.', 'adam@admin.com'),
                                                              ('Alex', '$2b$12$g953xJ8xSmKZMZGAdphV0eI7aTAk5qe3d5VjQtdhuR/Ql9NeiMnC2', 'alex@admin.com');
