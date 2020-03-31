@@ -68,3 +68,4 @@ INSERT INTO users (username, password, email_address) VALUES ('Gergő', '$2b$12$
                                                              ('Joel', '$2b$12$z3eXMhfgs1cF2GkuVDngwO81C.4lIr6AxBpvkCTJqqpbGMPZ4Bbwm', 'joel@admin.com'),
                                                              ('Adam', '$2b$12$Ec6L63fOL.CZ5v/MMm6EI.fdryBMSbAQx43VAm6xzyK5NqR79fcJ.', 'adam@admin.com'),
                                                              ('Alex', '$2b$12$g953xJ8xSmKZMZGAdphV0eI7aTAk5qe3d5VjQtdhuR/Ql9NeiMnC2', 'alex@admin.com');
+
