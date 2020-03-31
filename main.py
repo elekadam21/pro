@@ -1,6 +1,7 @@
-from flask import Flask, render_template, url_for, request, jsonify
+from flask import Flask, render_template, url_for, request
 
 from util import json_response
+import util
 
 import data_handler
 
@@ -34,7 +35,10 @@ def get_statuses():
 @json_response
 def create_new_board():
     data = request.get_json()
-    data_handler.create_new_board()
+    if data['owner'] is not None:
+        data_handler.create_new_board(int(data['owner']))
+    else:
+        data_handler.create_new_board(data['owner'] )
     top_board = data_handler.get_last_board()
     data_handler.create_status(top_board[0]['id'])
     return top_board
@@ -110,6 +114,56 @@ def board_open_close():
     data = request.get_json()
     response = data_handler.change_board_open_close(data['boolean'], data['id'])
     return response
+
+
+@app.route('/check_username', methods=['GET', 'POST'])
+@json_response
+def check_username():
+    data = request.get_json()
+    response = data_handler.check_user_data('username', data['username'])
+    return response
+
+
+@app.route('/check_email', methods=['GET', 'POST'])
+@json_response
+def check_email():
+    data = request.get_json()
+    response = data_handler.check_user_data('email_address', data['email'])
+    return response
+
+
+@app.route('/check_passwords', methods=['GET', 'POST'])
+@json_response
+def check_passwords():
+    data = request.get_json()
+    psw = util.hash_password(data['psw'])
+    if not util.verify_password(data['pswAgain'], psw):
+        return 'True'
+    else:
+        return 'False'
+
+
+@app.route('/save_data', methods=['GET', 'POST'])
+@json_response
+def save_data():
+    data = request.get_json()
+    psw = util.hash_password(data['password'])
+    data_handler.save_data(data['username'], data['email'], psw)
+    return 'done'
+
+
+@app.route('/check_login', methods=['GET', 'POST'])
+@json_response
+def check_login():
+    data = request.get_json()
+    if data_handler.check_user_data('username', data['username']) == 'True':
+        real_psw = data_handler.password_by_username(data['username'])
+        if not util.verify_password(data['password'], real_psw[0]['password']):
+            return 'False'
+        else:
+            return real_psw[0]['id']
+    else:
+        return 'False'
 
 
 def main():
