@@ -19,14 +19,64 @@
           href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/solid.css" integrity="sha384-rdyFrfAIC05c5ph7BKz3l5NG5yEottvO/DQ0dCrwD8gzeQDjYBHNr1ucUpQuljos" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/fontawesome.css" integrity="sha384-u5J7JghGz0qUrmEsWzBQkfvc8nK3fUT7DCaQzNQ+q4oEXhGSx+P2OqjWsfIRB8QT" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/modal.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/solid.css"
+          integrity="sha384-rdyFrfAIC05c5ph7BKz3l5NG5yEottvO/DQ0dCrwD8gzeQDjYBHNr1ucUpQuljos" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/fontawesome.css"
+          integrity="sha384-u5J7JghGz0qUrmEsWzBQkfvc8nK3fUT7DCaQzNQ+q4oEXhGSx+P2OqjWsfIRB8QT" crossorigin="anonymous">
     <script type="module" src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    <script type="module" src="{{ url_for('static', filename='js/registration_login_handler.js') }}" defer></script>
 </head>
 <body>
 <h1>ProMan</h1>
 <div class="board-container">
+</div>
+<div class="registration-modal">
+    <div class="modal-content">
+        <div class="container">
+            <span class="close">&times</span>
+            <h1>Sign Up</h1>
+            <div class="flash-message"></div>
+            <hr>
+
+            <label for="username"><b>Username</b></label>
+            <input type="text" id="username" placeholder="Enter Username" name="username">
+
+            <label for="email"><b>Email</b></label>
+            <input type="text" id="email" placeholder="Enter Email" name="email">
+
+            <label for="psw"><b>Password</b></label>
+            <input type="password" id="psw" placeholder="Enter Password" name="psw">
+
+            <label for="psw-repeat"><b>Repeat Password</b></label>
+            <input type="password" id="psw-repeat" placeholder="Repeat Password" name="psw-repeat">
+
+            <div class="clearfix">
+                <button type="submit" class="signupbtn">Sign Up</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="login-modal">
+    <div class="modal-content">
+        <div class="container">
+            <span class="close-login">&times</span>
+            <h1>Login</h1>
+            <div class="flash-message" id="login-flash"></div>
+            <hr>
+
+            <label for="user"><b>Username</b></label>
+            <input type="text" id="user" placeholder="Enter Username" name="username">
+
+            <label for="password"><b>Password</b></label>
+            <input type="password" id="password" placeholder="Enter Password" name="psw">
+
+            <div class="clearfix">
+                <button type="submit" class="loginbtn">Login</button>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

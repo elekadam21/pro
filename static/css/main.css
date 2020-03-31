@@ -136,8 +136,10 @@ section.board{
     word-wrap: break-word;
 }
 
+.registration,
 .add-board {
     text-align: center;
+    padding: 5px;
 }
 
 [data-open="false"] {

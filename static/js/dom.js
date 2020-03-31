@@ -1,6 +1,10 @@
 import {dataHandler} from "./data_handler.js";
 import {drag} from "./drag&drop.js";
 
+let user = localStorage.getItem('username');
+let id = localStorage.getItem('id');
+console.log(user)
+console.log(id)
 export let dom = {
     init: function () {
     },
@@ -11,27 +15,27 @@ export let dom = {
     },
     showBoards: function (boards, callback) {
         for (let board of boards) {
-            console.log(board.open);
-            const outerHtml = `
-            <section class="board" id="boardSection${board.id}">
-                <div class="board-header" id="board${board.id}"><span class="board-title" id="title${board.id}">${board.title}</span>
-                    <button class="board-add" data-column-id="${board.id}">Add column</button>
-                    <button class="board-add" data-board-id="${board.id}">Add Card</button>
-                    <i class="fa fa-trash" id="delete-board-button${board.id}" aria-hidden="true"></i>
-                    <button class="board-toggle" id="toggle${board.id}"><i class="fas fa-chevron-down"></i></button>
+            if (board['owner'] === null || board['owner'] === parseInt(id)) {
+                const outerHtml = `
+                <section class="board" id="boardSection${board.id}">
+                    <div class="board-header" id="board${board.id}"><span class="board-title" id="title${board.id}">${board.title}</span>
+                        <button class="board-add" data-column-id="${board.id}">Add column</button>
+                        <button class="board-add" data-board-id="${board.id}">Add Card</button>
+                        <i class="fa fa-trash" id="delete-board-button${board.id}" aria-hidden="true"></i>
+                        <button class="board-toggle" id="toggle${board.id}"><i class="fas fa-chevron-down"></i></button>
                 </div>
-            <div class="board-columns"  data-id="${board.id}" id="col${board.id}" data-open="${board.open}"></div>
-            </section>
-        `;
-            let boardsContainer = document.querySelector('.board-container');
-            boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
-            document.querySelector("[data-board-id=" + CSS.escape(board.id) + "]").addEventListener('click', dom.createCard);
-            document.querySelector("[data-column-id=" + CSS.escape(board.id) + "]").addEventListener('click', dom.addColumn);
-            dom.renameBoard(board.id, board.title);
-            dom.deleteBoard(board.id);
-            dom.boardOpenAndClose(board.id)
+                <div class="board-columns"  data-id="${board.id}" id="col${board.id}" data-open="${board.open}"></div>
+                </section>`;
+                let boardsContainer = document.querySelector('.board-container');
+                boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
+                document.querySelector("[data-board-id=" + CSS.escape(board.id) + "]").addEventListener('click', dom.createCard);
+                document.querySelector("[data-column-id=" + CSS.escape(board.id) + "]").addEventListener('click', dom.addColumn);
+                dom.renameBoard(board.id, board.title);
+                dom.deleteBoard(board.id);
+                dom.boardOpenAndClose(board.id);
+            }
+            callback();
         }
-        callback();
     },
     loadStatuses: function () {
         dataHandler.getStatuses(function (statuses) {
@@ -50,8 +54,10 @@ export let dom = {
                 <div class="board-column-content" data-status-id="${status.id}" data-status="${status.id}" id="status${status.id}"></div>
              `;
             let statusContainerBoard = document.querySelector("[data-id=" + CSS.escape(status.board_id) + "]");
-            statusContainerBoard.insertAdjacentHTML("beforeend", outerHtml);
-            dom.renameStatus(status.id, status.title);
+            if (statusContainerBoard !== null) {
+                statusContainerBoard.insertAdjacentHTML("beforeend", outerHtml);
+                dom.renameStatus(status.id, status.title);
+            }
         }
         callback();
     },
@@ -77,20 +83,35 @@ export let dom = {
         }
         callback();
     },
-    createAddBoardButton: function () {
+    createAddBoardButton: function (callback) {
         let boardsContainer = document.querySelector('.board-container');
-        const addButton = `<section class="add-board">
+        if (user !== null) {
+            const addButton = `<section class="add-board">
                                 <div id="add-board">
-                                    <button type="button" id="myBtn">Add new board</button>        
+                                    <button type="button" id="myBtn">Add new board</button>
+                                    <button value="registration" id="regBtn">Registration</button>
+                                    <button value="logout" id="logout">Logout</button><br><br>
+                                    <em>Logged in as ${user}</em>
                                 </div>
                             </section>`;
-        boardsContainer.insertAdjacentHTML('beforebegin', addButton)
-
+            boardsContainer.insertAdjacentHTML('beforebegin', addButton);
+            callback()
+        } else {
+            const addButton = `<section class="add-board">
+                                <div id="add-board">
+                                    <button type="button" id="myBtn">Add new board</button>
+                                    <button value="registration" id="regBtn">Registration</button>
+                                    <button value="login" id="login">Login</button>
+                                </div>
+                            </section>`;
+            boardsContainer.insertAdjacentHTML('beforebegin', addButton);
+            callback()
+        }
     },
     addBoard: function () {
         let addButton = document.querySelector('#myBtn');
         addButton.addEventListener('click', function () {
-            let data = 'start';
+            let data = {'owner': id};
             dataHandler._api_post('http://127.0.0.1:5000/create-new-board', data, (response) => {
                 let outerHtml = `
                         <section class="board" id="boardSection${response[0].id}">
@@ -211,9 +232,9 @@ export let dom = {
     },
     deleteBoard: function (board_id) {
         let deleteBoard = document.querySelector(`#delete-board-button${board_id}`);
-            deleteBoard.addEventListener('click', function () {
-                dataHandler.deleteBoard(board_id)
-            });
+        deleteBoard.addEventListener('click', function () {
+            dataHandler.deleteBoard(board_id)
+        });
     },
     boardOpenAndClose: function (board_id) {
         let toggle = document.querySelector(`#toggle${board_id}`);

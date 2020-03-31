@@ -23,11 +23,11 @@ def get_cards_by_status_id(cursor: RealDictCursor, status_id) -> list:
 
 
 @persistence.connection_handler
-def create_new_board(cursor):
+def create_new_board(cursor, owner):
     cursor.execute("""
-    INSERT INTO boards (open)
-    VALUES ('true')
-    """)
+    INSERT INTO boards (open, owner)
+    VALUES ('true', %(owner)s)
+    """, {'owner': owner})
 
 
 @persistence.connection_handler
@@ -138,10 +138,39 @@ def delete_board(cursor: RealDictCursor, board_id):
 
 @persistence.connection_handler
 def change_board_open_close(cursor: RealDictCursor, boolean, id_num):
-    print(boolean, id_num)
     query = '''
     UPDATE boards
     SET open = %(boolean)s
     WHERE id = %(id_num)s'''
     cursor.execute(query, {"boolean": boolean, "id_num": id_num})
     return 'done'
+
+
+@persistence.connection_handler
+def check_user_data(cursor: RealDictCursor, column, data):
+    query = '''
+    SELECT {}
+    FROM users
+    WHERE {} = %(data)s'''.format(column, column)
+    cursor.execute(query, {"data": data})
+    if cursor.fetchall():
+        return 'True'
+    return 'False'
+
+
+@persistence.connection_handler
+def save_data(cursor: RealDictCursor, username, email, password):
+    query = '''
+    INSERT INTO users (username, password, email_address) 
+    VALUES(%(username)s, %(password)s, %(email)s)'''
+    cursor.execute(query, {'username': username, 'email': email, 'password': password})
+
+
+@persistence.connection_handler
+def password_by_username(cursor: RealDictCursor, username):
+    query = '''
+    SELECT password, id
+    FROM users
+    WHERE username = %(username)s'''
+    cursor.execute(query, {"username": username})
+    return cursor.fetchall()
