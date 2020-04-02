@@ -7,6 +7,7 @@ function init() {
     dom.loadBoards();
     dom.createAddBoardButton(start);
     dom.addBoard();
+    dom.addPrivateBoard();
 }
 
 init();
