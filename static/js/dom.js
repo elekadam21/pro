@@ -89,6 +89,7 @@ export let dom = {
             const addButton = `<section class="add-board">
                                 <div id="add-board">
                                     <button type="button" id="myBtn">Add new board</button>
+                                    <button type="button" id="privBoard">Add private board</button>
                                     <button value="registration" id="regBtn">Registration</button>
                                     <button value="logout" id="logout">Logout</button><br><br>
                                     <em>Logged in as ${user}</em>
@@ -111,8 +112,35 @@ export let dom = {
     addBoard: function () {
         let addButton = document.querySelector('#myBtn');
         addButton.addEventListener('click', function () {
-            let data = {'owner': id};
+            let data = {'owner': null};
             dataHandler._api_post('http://127.0.0.1:5000/create-new-board', data, (response) => {
+                let outerHtml = `
+                        <section class="board" id="boardSection${response[0].id}">
+                            <div class="board-header" id="board${response[0].id}"><span class="board-title" id="title${response[0].id}">${response[0].title}</span>
+                                <button class="board-add" data-column-id="${response[0].id}">Add column</button>
+                                <button class="board-add" data-board-id="${response[0].id}">Add Card</button>
+                                <i class="fa fa-trash" id="delete-board-button${response[0].id}" aria-hidden="true"></i>
+                                <button class="board-toggle" id="toggle${response[0].id}"><i class="fas fa-chevron-down"></i></button>
+                            </div>
+                            <div class="board-columns" data-id="${response[0].id}" id="col${response[0].id}" data-open="${response[0].open}"></div>
+                        </section>
+                    `;
+                let boardsContainer = document.querySelector('.board-container');
+                boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
+                dom.loadStatuses();
+                dom.renameBoard(response[0].id, response[0].title);
+                document.querySelector("[data-board-id=" + CSS.escape(response[0].id) + "]").addEventListener('click', dom.createCard);
+                document.querySelector("[data-column-id=" + CSS.escape(response[0].id) + "]").addEventListener('click', dom.addColumn);
+                dom.deleteBoard(response[0].id);
+                dom.boardOpenAndClose(response[0].id)
+            })
+        });
+    },
+    addPrivateBoard: function () {
+        let addButton = document.querySelector('#privBoard');
+        addButton.addEventListener('click', function () {
+            let data = {'owner': id};
+            dataHandler._api_post('http://127.0.0.1:5000/create-private-board', data, (response) => {
                 let outerHtml = `
                         <section class="board" id="boardSection${response[0].id}">
                             <div class="board-header" id="board${response[0].id}"><span class="board-title" id="title${response[0].id}">${response[0].title}</span>

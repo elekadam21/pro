@@ -39,11 +39,17 @@ def get_statuses():
 @app.route('/create-new-board', methods=['GET', 'POST'])
 @json_response
 def create_new_board():
+    data_handler.create_new_board()
+    top_board = data_handler.get_last_board()
+    data_handler.create_status(top_board[0]['id'])
+    return top_board
+
+
+@app.route('/create-private-board', methods=['GET', 'POST'])
+@json_response
+def create_private_board():
     data = request.get_json()
-    if data['owner'] is not None:
-        data_handler.create_new_board(int(data['owner']))
-    else:
-        data_handler.create_new_board(data['owner'] )
+    data_handler.create_new_board(int(data['owner']))
     top_board = data_handler.get_last_board()
     data_handler.create_status(top_board[0]['id'])
     return top_board
@@ -61,7 +67,6 @@ def create_card():
 @json_response
 def delete_card():
     card_id = request.get_json()
-    print(card_id)
     response = data_handler.delete_card(card_id)
     return response
 
